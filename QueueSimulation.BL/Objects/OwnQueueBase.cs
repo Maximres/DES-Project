@@ -7,6 +7,10 @@ using System.Threading.Tasks;
 
 namespace QueueSimulation.BL.Objects
 {
+    /// <summary>
+    /// Temp class. Must be erased
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public abstract class OwnQueueBase<T> where T : Product
     {
         /// <summary>

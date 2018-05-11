@@ -15,7 +15,7 @@ namespace QueueSimulation.BL.Objects
     {
 
         /// <summary>
-        /// Порт входа объекта
+        /// Порт входа объекта.
         /// </summary>
         [Browsable(true)]
         [ReadOnly(true)]
@@ -23,7 +23,7 @@ namespace QueueSimulation.BL.Objects
         public abstract Conveyor<T> PortIn { get; set; }
 
         /// <summary>
-        /// Порт выхода объекта
+        /// Порт выхода объекта.
         /// </summary>
         [Browsable(true)]
         [ReadOnly(true)]
@@ -31,7 +31,7 @@ namespace QueueSimulation.BL.Objects
         public abstract Conveyor<T> PortOut { get; set; }
 
         /// <summary>
-        /// Эмуляция работы станка. Задержка перед передачей объекта
+        /// Задает значение задержки производства продукции (в секундах).
         /// </summary>
         [Browsable(true)]
         [ReadOnly(false)]
@@ -39,7 +39,7 @@ namespace QueueSimulation.BL.Objects
         public abstract double Delay { get; set; }
 
         /// <summary>
-        /// Вместительность станка
+        /// Получает или задает вместительность станка.
         /// </summary>
         [Browsable(true)]
         [ReadOnly(false)]
@@ -47,7 +47,7 @@ namespace QueueSimulation.BL.Objects
         public abstract long Capacity { get; set; }
 
         /// <summary>
-        /// Определяет, сломан (неактивен) ли станок
+        /// Определяет, сломан (неактивен) ли станок.
         /// </summary>
         [Browsable(true)]
         [ReadOnly(true)]
@@ -55,7 +55,7 @@ namespace QueueSimulation.BL.Objects
         public abstract bool IsBroken { get; }
 
         /// <summary>
-        /// Время бездействия во время поломки
+        /// Получает или задает время бездействия во время поломки станка.
         /// </summary>
         [Browsable(true)]
         [ReadOnly(false)]
@@ -63,7 +63,7 @@ namespace QueueSimulation.BL.Objects
         public abstract double InactiveTime { get; set; }
         
         /// <summary>
-        /// Шанс поломки (деактивности)
+        /// Получает или задает шанс поломки (деактивности) станка.
         /// </summary>
         [Range(0,1)]
         [Browsable(true)]

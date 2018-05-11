@@ -25,7 +25,7 @@ namespace QueueSimulation.BL.Concrete.Products
             _isIdle = true;
             _isProccessed = false;
             _isMoving = false;
-            _size = new Size(100, 100);
+            _size = new Size(1, 1);
             _prodType = ProductTypes.Mintbox;
         }
 
@@ -38,17 +38,14 @@ namespace QueueSimulation.BL.Concrete.Products
             return this._prodType.ToString();
         }
 
-        public override bool Equals(object obj)
-        {
-            return base.Equals(obj);
-        }
-
         public override int Id => _id;
+
         public override string Name { get => _name; set => _name = value; }
 
         public override bool IsIdle => _isIdle;
 
         public override Size Size { get => _size; set => _size = value; }
+
         public override ProductTypes ProductType => _prodType;
 
         public override bool IsProcessed => _isProccessed;

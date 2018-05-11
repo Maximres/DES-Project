@@ -6,32 +6,34 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 using System.Windows.Forms;
 using Microsoft.Msagl.GraphViewerGdi;
 using Microsoft.Msagl.Drawing;
 using QueueSimulation.BL.Objects;
 using System.Diagnostics;
+using QueueSimulation.BL.Concrete.Products;
 
 namespace QueueSimulation
 {
-    public partial class Form1 : Form
+    public partial class MainForm : Form
     {
         Stopwatch stopwatch;
         GViewer gViewer;
 
-        public Form1()
+        public MainForm()
         {
             InitializeComponent();
-
             #region Init
             //create a viewer object 
             gViewer = new GViewer();
             //create a graph object 
             Microsoft.Msagl.Drawing.Graph graph = new Graph("graph");
+            //can generate an event at specific time
+            //var tm = new System.Threading.Timer()
             #endregion
 
             #region Setup
-
             #endregion
 
             //create the graph content 
@@ -72,9 +74,10 @@ namespace QueueSimulation
 
 
 
-        private void Form1_Load(object sender, EventArgs e)
+        private void MainForm_Load(object sender, EventArgs e)
         {
             Queue<int> asff = new Queue<int>();
+            MintBoxProduct mintBox = new MintBoxProduct();
          }
 
         private void ListView_SelectedIndexChanged(object sender, ListViewItemSelectionChangedEventArgs e)
@@ -125,7 +128,14 @@ namespace QueueSimulation
 
         private void TheTimer_Tick(object sender, EventArgs e)
         {
+            Simulation();
+        }
+
+        private void Simulation()
+        {
+            //TODO: start simulation
         }
     }
+
 
 }

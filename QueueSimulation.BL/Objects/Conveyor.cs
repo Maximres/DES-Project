@@ -11,7 +11,7 @@ namespace QueueSimulation.BL.Objects
     public abstract class Conveyor<T> where T : Product
     {
         /// <summary>
-        /// Порт входа объекта
+        /// Порт входа объекта.
         /// </summary>
         [Browsable(true)]
         [ReadOnly(true)]
@@ -19,7 +19,7 @@ namespace QueueSimulation.BL.Objects
         public abstract Machine<T> PortIn { get; set; }
 
         /// <summary>
-        /// Определяет, можно ли добавить продукт на конвейер
+        /// Определяет, можно ли добавить продукт на конвейер.
         /// </summary>
         [Browsable(true)]
         [ReadOnly(true)]
@@ -35,7 +35,7 @@ namespace QueueSimulation.BL.Objects
         public abstract bool CanThrowProduct { get;}
 
         /// <summary>
-        /// Порт выхода объекта
+        /// Порт выхода объекта.
         /// </summary>
         [Browsable(true)]
         [ReadOnly(true)]
@@ -43,12 +43,12 @@ namespace QueueSimulation.BL.Objects
         public abstract Machine<T> PortOut { get; set; }
 
         /// <summary>
-        /// Длина конвейера
+        /// Определяет или задает длину конвейера (в метрах).
         /// </summary>
         [Browsable(true)]
         [ReadOnly(false)]
         [Description("Длина конвейера")]
-        public abstract long Length { get; set; }
+        public abstract double Length { get; set; }
 
         /// <summary>
         /// Расстояние между объектами конвейера
@@ -56,7 +56,7 @@ namespace QueueSimulation.BL.Objects
         //public abstract int Space { get; set; }
 
         /// <summary>
-        /// Вместительность конвейера
+        /// Определяет или задает вместительность конвейера.
         /// </summary>
         [Browsable(true)]
         [ReadOnly(false)]
@@ -64,7 +64,7 @@ namespace QueueSimulation.BL.Objects
         public abstract int Capacity { get; set; }
 
         /// <summary>
-        /// Задержка перед передачей объекта
+        /// Определяет или задает задержка перед передачей объекта (в секундах).
         /// </summary>
         [Browsable(true)]
         [ReadOnly(false)]
@@ -72,13 +72,12 @@ namespace QueueSimulation.BL.Objects
         public abstract int Delay { get; set; }
 
         /// <summary>
-        /// Скорость 
+        /// Определяет или задает скорость движения объектов по конвейеру (в метрах на секунду).
         /// </summary>
-        /// 
         [Browsable(true)]
         [ReadOnly(false)]
         [Description("Скорость")]
-        public abstract long Speed { get; set; }
+        public abstract double Speed { get; set; }
 
 
     }

@@ -17,11 +17,11 @@ namespace QueueSimulation.BL.Abstract
         /// <summary>
         /// Добавить элемент в очередь.
         /// </summary>
-        /// <param name="item"> Добавляемые данные. </param>
+        /// <param name="item"> Добавляемый объект </param>
         void Enqueue(T item);
 
         /// <summary>
-        /// Получить элемент из очереди с удалением.
+        /// Получить объект из очереди с удалением.
         /// </summary>
         /// <returns> Элемент данных. </returns>
         T Dequeue();
