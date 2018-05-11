@@ -6,25 +6,46 @@ using System.Threading.Tasks;
 
 namespace QueueSimulation.BL.Objects
 {
-    public abstract class Source
+    public abstract class Source<T> where T : Product
     {
         /// <summary>
-        /// Порт выхода объектов
+        /// Очередь для хранения объектов продукции.
         /// </summary>
-        /// <remarks>1 каждую секунду</remarks>
-        public abstract Conveyor<Product> PortOut { get; set; }
+        protected Queue<T> _products { get; set; }
 
         /// <summary>
-        /// Скорость поступления объектов
+        /// Инициализирует очередь.
+        /// </summary>
+        /// <param name="prodCount"></param>
+        public Source(int prodCount)
+        {
+            _products = new Queue<T>(prodCount);
+        }
+
+        /// <summary>
+        /// Порт выхода объектов.
+        /// </summary>
+        /// <remarks>1 каждую секунду</remarks>
+        public abstract Conveyor<T> PortOut { get; set; }
+
+        /// <summary>
+        /// Определяет или задает скорость поступления объектов из источника.
         /// </summary>
         public abstract double ArrivalRate { get; set; }
 
         /// <summary>
-        /// Максимальное количество объектов
+        /// Определяет, не пуст ли источник.
         /// </summary>
-        public abstract long MaxArrivals { get; set; }
+        public abstract bool IsEmpty { get; }
 
+        /// <summary>
+        /// Определяет или задает максимальное количество объектов в очереди.
+        /// </summary>
+        public abstract int Capacity { get; }
 
-
+        /// <summary>
+        /// Определяет количество элементов в источнике.
+        /// </summary>
+        public abstract int Count { get; }
     }
 }
