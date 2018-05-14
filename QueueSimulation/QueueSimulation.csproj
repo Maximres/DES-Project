@@ -55,6 +55,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Infrastructure\NodeInsertedByUserEventArgs.cs" />
+    <Compile Include="Infrastructure\Nodes\GetNextNodeId.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>

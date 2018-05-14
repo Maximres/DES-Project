@@ -8,23 +8,11 @@ using System.Threading.Tasks;
 
 namespace QueueSimulation.BL.Objects
 {
-    public abstract class Conveyor<T> where T : Product
+    public abstract class Conveyor<T> : Container<T> where T : Product
     {
-        /// <summary>
-        /// Порт входа объекта.
-        /// </summary>
-        [Browsable(true)]
-        [ReadOnly(true)]
-        [Description("Порт входа объекта")]
-        public abstract Machine<T> PortIn { get; set; }
+        
 
-        /// <summary>
-        /// Определяет, можно ли добавить продукт на конвейер.
-        /// </summary>
-        [Browsable(true)]
-        [ReadOnly(true)]
-        [Description("Определяет, можно ли добавить продуки на конвейер")]
-        public abstract bool CanTakeProduct { get; }
+        
 
         /// <summary>
         /// Определяет, можно ли передать продукт с конвейера
@@ -54,14 +42,6 @@ namespace QueueSimulation.BL.Objects
         /// Расстояние между объектами конвейера
         /// </summary>
         //public abstract int Space { get; set; }
-
-        /// <summary>
-        /// Определяет или задает вместительность конвейера.
-        /// </summary>
-        [Browsable(true)]
-        [ReadOnly(false)]
-        [Description("Вместительность конвейера")]
-        public abstract int Capacity { get; set; }
 
         /// <summary>
         /// Определяет или задает задержка перед передачей объекта (в секундах).

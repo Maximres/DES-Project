@@ -45,6 +45,7 @@
             this.обАвтореToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolsPanel = new System.Windows.Forms.ToolStrip();
             this.btnStart = new System.Windows.Forms.ToolStripButton();
+            this.btnPause = new System.Windows.Forms.ToolStripButton();
             this.btnStop = new System.Windows.Forms.ToolStripButton();
             this.btnInterval = new System.Windows.Forms.ToolStripButton();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
@@ -59,7 +60,11 @@
             this.toolStripStatusLabel3 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolPanelStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.TheTimer = new System.Windows.Forms.Timer(this.components);
-            this.btnPause = new System.Windows.Forms.ToolStripButton();
+            this.contextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.contextItemDeleteElement = new System.Windows.Forms.ToolStripMenuItem();
+            this.contextItemDeleteSelectedElements = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.contextItemConnectElements = new System.Windows.Forms.ToolStripMenuItem();
             this.menuPanel.SuspendLayout();
             this.toolsPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -71,6 +76,7 @@
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
             this.statusPanel.SuspendLayout();
+            this.contextMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuPanel
@@ -134,6 +140,15 @@
             this.btnStart.Text = "Старт";
             this.btnStart.Click += new System.EventHandler(this.toolStripButton1_Click);
             // 
+            // btnPause
+            // 
+            this.btnPause.Image = ((System.Drawing.Image)(resources.GetObject("btnPause.Image")));
+            this.btnPause.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnPause.Name = "btnPause";
+            this.btnPause.Size = new System.Drawing.Size(70, 24);
+            this.btnPause.Text = "Pause";
+            this.btnPause.Click += new System.EventHandler(this.toolStripButton4_Click);
+            // 
             // btnStop
             // 
             this.btnStop.Image = ((System.Drawing.Image)(resources.GetObject("btnStop.Image")));
@@ -191,6 +206,7 @@
             this.listModelObjects.SmallImageList = this.MainImageList;
             this.listModelObjects.TabIndex = 0;
             this.listModelObjects.UseCompatibleStateImageBehavior = false;
+            this.listModelObjects.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.listModelObjects_ItemDrag);
             this.listModelObjects.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.ListView_SelectedIndexChanged);
             // 
             // MainImageList
@@ -284,14 +300,42 @@
             this.TheTimer.Interval = 1000;
             this.TheTimer.Tick += new System.EventHandler(this.TheTimer_Tick);
             // 
-            // btnPause
+            // contextMenu
             // 
-            this.btnPause.Image = ((System.Drawing.Image)(resources.GetObject("btnPause.Image")));
-            this.btnPause.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnPause.Name = "btnPause";
-            this.btnPause.Size = new System.Drawing.Size(70, 24);
-            this.btnPause.Text = "Pause";
-            this.btnPause.Click += new System.EventHandler(this.toolStripButton4_Click);
+            this.contextMenu.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.contextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.contextItemDeleteElement,
+            this.contextItemDeleteSelectedElements,
+            this.toolStripSeparator1,
+            this.contextItemConnectElements});
+            this.contextMenu.Name = "contextMenu";
+            this.contextMenu.Size = new System.Drawing.Size(299, 82);
+            // 
+            // contextItemDeleteElement
+            // 
+            this.contextItemDeleteElement.Name = "contextItemDeleteElement";
+            this.contextItemDeleteElement.Size = new System.Drawing.Size(298, 24);
+            this.contextItemDeleteElement.Text = "Удалить элемент";
+            this.contextItemDeleteElement.Click += new System.EventHandler(this.contextItemDeleteElement_Click);
+            // 
+            // contextItemDeleteSelectedElements
+            // 
+            this.contextItemDeleteSelectedElements.Name = "contextItemDeleteSelectedElements";
+            this.contextItemDeleteSelectedElements.Size = new System.Drawing.Size(298, 24);
+            this.contextItemDeleteSelectedElements.Text = "Удалить выделенные элементы";
+            this.contextItemDeleteSelectedElements.Click += new System.EventHandler(this.contextItemDeleteSelectedElements_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(295, 6);
+            // 
+            // contextItemConnectElements
+            // 
+            this.contextItemConnectElements.Name = "contextItemConnectElements";
+            this.contextItemConnectElements.Size = new System.Drawing.Size(298, 24);
+            this.contextItemConnectElements.Text = "Присоеднить";
+            this.contextItemConnectElements.Click += new System.EventHandler(this.contextItemConnectElements_Click);
             // 
             // MainForm
             // 
@@ -322,6 +366,7 @@
             this.splitContainer2.ResumeLayout(false);
             this.statusPanel.ResumeLayout(false);
             this.statusPanel.PerformLayout();
+            this.contextMenu.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -351,6 +396,11 @@
         private System.Windows.Forms.ImageList MainImageList;
         private System.Windows.Forms.Timer TheTimer;
         private System.Windows.Forms.ToolStripButton btnPause;
+        private System.Windows.Forms.ContextMenuStrip contextMenu;
+        private System.Windows.Forms.ToolStripMenuItem contextItemDeleteSelectedElements;
+        private System.Windows.Forms.ToolStripMenuItem contextItemDeleteElement;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripMenuItem contextItemConnectElements;
     }
 }
 
