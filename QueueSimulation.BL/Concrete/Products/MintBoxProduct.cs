@@ -18,14 +18,14 @@ namespace QueueSimulation.BL.Concrete.Products
         Size _size;
         ProductTypes _prodType;
 
-        public MintBoxProduct()
+        public MintBoxProduct(int id, string name, Size boxSize)
         {
-            _id = 1;
-            _name = "Mint Box";
+            _id = id;
+            _name = name;
             _isIdle = true;
             _isProccessed = false;
             _isMoving = false;
-            _size = new Size(1, 1);
+            _size = boxSize;
             _prodType = ProductTypes.Mintbox;
         }
 

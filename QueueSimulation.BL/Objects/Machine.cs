@@ -28,7 +28,7 @@ namespace QueueSimulation.BL.Objects
         [Browsable(true)]
         [ReadOnly(true)]
         [Description("Название продукта продукта")]
-        public abstract Conveyor<T> PortOut { get; set; }
+        public abstract Container<T> PortOut { get; set; }
 
         /// <summary>
         /// Задает значение задержки производства продукции (в секундах).
@@ -65,10 +65,10 @@ namespace QueueSimulation.BL.Objects
         /// <summary>
         /// Получает или задает шанс поломки (деактивности) станка.
         /// </summary>
-        [Range(0,1)]
+        [Range(0.0,1.0)]
         [Browsable(true)]
         [ReadOnly(false)]
         [Description("Шанс поломки (деактивности)")]
-        public abstract byte CrashChance { get; set; }
+        public abstract float CrashChance { get; set; }
     }
 }

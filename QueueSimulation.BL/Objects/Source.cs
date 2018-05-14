@@ -14,7 +14,7 @@ namespace QueueSimulation.BL.Objects
         protected Queue<T> _products { get; set; }
 
         /// <summary>
-        /// Инициализирует очередь.
+        /// Инициализирует очередь с определенным количеством размером.
         /// </summary>
         /// <param name="prodCount"></param>
         public Source(int prodCount)
