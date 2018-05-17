@@ -8,21 +8,8 @@ using System.Threading.Tasks;
 
 namespace QueueSimulation.BL.Abstract
 {
-    public interface IMachine<T> where T : Product
+    public interface IMachine<T>: ISimulation<T> where T : ProductBase
     {
-        /// <summary>
-        /// Происходит, когда станок выпускает объект.
-        /// </summary>
-        event EventHandler<ProductEngagedEventArgs<T>> OnDequeue;
-
-        /// <summary>
-        /// Происходит, когда станок получает объект.
-        /// </summary>
-        event EventHandler<ProductEngagedEventArgs<T>> OnEnqueue;
-
-        /// <summary>
-        /// Эмулирует работу станка.
-        /// </summary>
-        void EmulateMachine();
+        
     }
 }

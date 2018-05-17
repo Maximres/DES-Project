@@ -1,4 +1,5 @@
-﻿using System;
+﻿using QueueSimulation.BL.Abstract;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -7,17 +8,13 @@ using System.Threading.Tasks;
 
 namespace QueueSimulation.BL.Objects
 {
-    public abstract class Container<T> where T : Product
+    public abstract class ContainerBase<T> where T : ProductBase
     {
         /// <summary>
-        /// Определяет, можно ли добавить продукт на конвейер.
+        /// Добавляет вершину к объекту.
         /// </summary>
-        [Browsable(true)]
-        [ReadOnly(true)]
-        [Description("Определяет, можно ли добавить продуки на конвейер")]
-        public abstract bool CanTakeProduct { get; }
-
-        
+        /// <param name="node"></param>
+        public abstract void AddNode(IDequeueable<T> node);
 
         /// <summary>
         /// Порт входа объекта.
@@ -25,7 +22,15 @@ namespace QueueSimulation.BL.Objects
         [Browsable(true)]
         [ReadOnly(true)]
         [Description("Порт входа объекта")]
-        public abstract Machine<T> PortIn { get; set; }
+        public abstract IDequeueable<T> PortIn { get; set; }
+
+        /// <summary>
+        /// Порт выхода объекта.
+        /// </summary>
+        [Browsable(true)]
+        [ReadOnly(true)]
+        [Description("Порт выхода объекта")]
+        public abstract IDequeueable<T> PortOut { get; set; }
 
         /// <summary>
         /// Определяет или задает вместительность конвейера.

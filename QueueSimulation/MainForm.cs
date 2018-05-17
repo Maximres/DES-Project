@@ -20,6 +20,9 @@ using MSAGLColor = Microsoft.Msagl.Drawing.Color;
 using System.Collections;
 using QueueSimulation.Infrastructure;
 using QueueSimulation.Infrastructure.Nodes;
+using QueueSimulation.BL.Concrete.Sources;
+using QueueSimulation.BL.Concrete.Machines;
+using QueueSimulation.BL.Concrete.Conveyors;
 
 namespace QueueSimulation
 {
@@ -70,9 +73,9 @@ namespace QueueSimulation
 
             gViewer.Size = this.viewerPanel.Size;
 
-            graph.AddEdge("Source", "queue").Attr.AddStyle(Microsoft.Msagl.Drawing.Style.Solid);
+            graph.AddEdge("SourceBase", "queue").Attr.AddStyle(Microsoft.Msagl.Drawing.Style.Solid);
 
-            var c = graph.FindNode("Source");
+            var c = graph.FindNode("SourceBase");
 
             c.LabelText = " ";
             //c.Attr.Shape = Microsoft.Msagl.Drawing.Shape.Diamond;
@@ -227,7 +230,17 @@ namespace QueueSimulation
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            Queue<int> asff = new Queue<int>();
+            MintBoxProduct mintBox = new MintBoxProduct(1, "mintbox", new Size(1, 2));
+            //Source<ProductBase> source = new Source<ProductBase>(50, mintBox);
+            //MainConveyor<ProductBase> mainConveyor = new MainConveyor<ProductBase>()
+            //FirstMachine<ProductBase> firstMachine = new FirstMachine<ProductBase>(source);
+
+            Source<ProductBase> source = new Source<ProductBase>(100, mintBox);
+            MainConveyor<ProductBase> mainConveyor = new MainConveyor<ProductBase>();
+            mainConveyor.AddNode(source);
+            FirstMachine<ProductBase> firstMachine = new FirstMachine<ProductBase>();
+            firstMachine.AddNode(mainConveyor);
+            source.Simulate();
         }
 
         private void ListView_SelectedIndexChanged(object sender, ListViewItemSelectionChangedEventArgs e)
@@ -299,7 +312,7 @@ namespace QueueSimulation
                     gViewer.RemoveEdge(edge, true);
                 else
                 {
-                    if (ob is IViewerNode node && node.Node.Id != "Source" && node.Node.Id != "Seed")
+                    if (ob is IViewerNode node && node.Node.Id != "SourceBase" && node.Node.Id != "SeedBase")
                     {
                         gViewer.RemoveNode(node, true);
                     }
@@ -319,7 +332,7 @@ namespace QueueSimulation
             {
                 if (elem.Node.Equals(selectedObj))
                 {
-                    if (elem.Node.Id != "Source" && elem.Node.Id != "Seed")
+                    if (elem.Node.Id != "SourceBase" && elem.Node.Id != "SeedBase")
                     {
                         gViewer.RemoveNode(elem, true);
                         return;

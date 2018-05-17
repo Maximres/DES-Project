@@ -6,32 +6,36 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MathNet.Numerics;
+using MathNet;
+using MathNet.Numerics.Distributions;
+using MathNet.Numerics.Random;
 
 namespace QueueSimulation.BL.Concrete.Machines
 {
-    public class FirstMachine<T> : Machine<T>, IMachine<T> where T : Product
+    public class FirstMachine<T> : MachineBase<T>, IMachine<T> where T : ProductBase
     {
-        protected FirstMachine(Conveyor<T> conveyor)
+        public FirstMachine()
         {
-            PortIn = conveyor;
+            this._exponential = new Exponential(CrashRatePerProduct);
         }
 
-        public override Conveyor<T> PortIn { get; set; }
-        public override Container<T> PortOut { get; set; } = null;
+        public override IDequeueable<T> PortIn { get; set; }
+        public override IDequeueable<T> PortOut { get; set; } = null;
         public override double Delay { get; set; } = 3;
-        public override long Capacity { get; set; } = 0;
+        public override int Capacity { get; set; } = 0;
 
         public override bool IsBroken => false;
 
         public override double InactiveTime { get; set; } = 5;
-        public override float CrashChance { get; set; } = 0.05f;
+        public override int CrashRatePerProduct { get; set; } = 100;
 
-        public event EventHandler<ProductEngagedEventArgs<T>> OnDequeue = delegate { };
-        public event EventHandler<ProductEngagedEventArgs<T>> OnEnqueue = delegate { };
+        public override bool CanTakeProduct => false;
 
-        public void EmulateMachine()
-        {
-            throw new NotImplementedException();
-        }
+        public override double CrashChance { get; set; } = 0.1;
+
+        public override bool CanThrowProduct => true;
+
     }
+
 }

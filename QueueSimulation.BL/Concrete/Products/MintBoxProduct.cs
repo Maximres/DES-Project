@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace QueueSimulation.BL.Concrete.Products
 {
-    public class MintBoxProduct : Product
+    public class MintBoxProduct : ProductBase
     {
         int _id;
         string _name;

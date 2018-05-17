@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace QueueSimulation.BL.Infrastructure
 {
-    public class ProductEngagedEventArgs<T> : EventArgs where T : Product
+    public class ProductEngagedEventArgs<T> : EventArgs where T : ProductBase
     {
         public T Product { get; private set; }
 

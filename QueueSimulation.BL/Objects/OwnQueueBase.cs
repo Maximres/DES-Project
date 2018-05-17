@@ -11,7 +11,7 @@ namespace QueueSimulation.BL.Objects
     /// Temp class. Must be erased
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public abstract class OwnQueueBase<T> where T : Product
+    public abstract class OwnQueueBase<T> where T : ProductBase
     {
         /// <summary>
         /// Количество элементов.
