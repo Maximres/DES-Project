@@ -8,21 +8,8 @@ using System.Threading.Tasks;
 
 namespace QueueSimulation.BL.Abstract
 {
-    public interface IConveyor<T> where T : Product
+    public interface IConveyor<T>: ISimulation<T> where T : ProductBase
     {
-        /// <summary>
-        /// Происходит, когда конвейер выпускает продукт.
-        /// </summary>
-        event EventHandler<ProductEngagedEventArgs<T>> OnDequeue;
-
-        /// <summary>
-        /// Происходит, когда конвейер получает продукт.
-        /// </summary>
-        event EventHandler<ProductEngagedEventArgs<T>> OnEnqueue;
-
-        /// <summary>
-        /// Эмулирует работу конвейера.
-        /// </summary>
-        void EmulateConveyor();
+        
     }
 }

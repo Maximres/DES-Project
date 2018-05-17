@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace QueueSimulation.BL.Concrete.Products
 {
-    public class RedBoxProduct : Product
+    public class RedBoxProduct : ProductBase
     {
         int _id;
 

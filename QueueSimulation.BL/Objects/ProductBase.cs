@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace QueueSimulation.BL.Objects
 {
-    public abstract class Product
+    public abstract class ProductBase
     {
         /// <summary>
         /// Получает уникальный идентификатов объекта.

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace QueueSimulation.BL.Abstract
 {
-    public interface IProduction<T> where T : Product
+    public interface IProduction<T> where T : ProductBase
     {
         /// <summary>
         /// Происходит, когда продукт готов к передаче в другой объект.

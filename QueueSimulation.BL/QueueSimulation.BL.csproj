@@ -30,10 +30,15 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="MathNet.Numerics, Version=4.4.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MathNet.Numerics.4.4.1\lib\net461\MathNet.Numerics.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -44,28 +49,34 @@
   <ItemGroup>
     <Compile Include="Abstract\IConveyor.cs" />
     <Compile Include="Abstract\ICustomQueue.cs" />
+    <Compile Include="Abstract\IDequeueable.cs" />
+    <Compile Include="Abstract\IEnqueueable.cs" />
     <Compile Include="Abstract\IMachine.cs" />
     <Compile Include="Abstract\IProduction.cs" />
+    <Compile Include="Abstract\ISimulation.cs" />
     <Compile Include="Abstract\ISource.cs" />
+    <Compile Include="Concrete\Conveyors\MainConveyor.cs" />
     <Compile Include="Concrete\Machines\FirstMachine.cs" />
     <Compile Include="Concrete\Products\MintBoxProduct.cs" />
     <Compile Include="Concrete\Products\OrangeBoxProduct.cs" />
     <Compile Include="Concrete\Products\RedBoxProduct.cs" />
+    <Compile Include="Concrete\Seed.cs" />
+    <Compile Include="Concrete\Sources\Source.cs" />
     <Compile Include="Infrastructure\ProductReleasedEventArgs.cs" />
     <Compile Include="Infrastructure\ProductTypeConveter.cs" />
-    <Compile Include="Objects\Container.cs" />
-    <Compile Include="Objects\Conveyor.cs" />
-    <Compile Include="Objects\Machine.cs" />
+    <Compile Include="Objects\ContainerBase.cs" />
+    <Compile Include="Objects\ConveyorBase.cs" />
+    <Compile Include="Objects\MachineBase.cs" />
     <Compile Include="Objects\OwnQueueBase.cs" />
-    <Compile Include="Objects\Product.cs" />
+    <Compile Include="Objects\ProductBase.cs" />
     <Compile Include="Infrastructure\ProductTypes.cs" />
-    <Compile Include="Objects\Seed.cs" />
-    <Compile Include="Objects\Source.cs" />
+    <Compile Include="Objects\SeedBase.cs" />
+    <Compile Include="Objects\SourceBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="Concrete\Conveyors\" />
-    <Folder Include="Concrete\Sources\" />
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

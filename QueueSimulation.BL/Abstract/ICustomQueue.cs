@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace QueueSimulation.BL.Abstract
 {
-    public interface ICustomQueue<T> where T : Product
+    public interface ICustomQueue<T> where T : ProductBase
     {
         /// <summary>
         /// Количество элементов.

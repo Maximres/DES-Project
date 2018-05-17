@@ -8,13 +8,8 @@ using System.Threading.Tasks;
 
 namespace QueueSimulation.BL.Abstract
 {
-    public interface ISource<T> where T : Product
+    public interface ISource<T> : ISimulation<T> where T : ProductBase
     {
-        /// <summary>
-        /// Высвобождает первоый объектв в очереди.
-        /// </summary>
-        /// <returns></returns>
-        T Dequeue();
 
         /// <summary>
         /// Обновляет источник.
@@ -22,18 +17,10 @@ namespace QueueSimulation.BL.Abstract
         void Reset();
 
         /// <summary>
-        /// Происходит, когда источник высвобождает объект.
+        /// Обновляет источник новыми объектами
         /// </summary>
-        event EventHandler<ProductEngagedEventArgs<T>> OnDequeue;
+        void Reset(T product);
 
-        /// <summary>
-        /// Происходит, когда в источнике заканчиваются объекты
-        /// </summary>
-        event EventHandler OnEmpty;
-
-        /// <summary>
-        /// Эмуляция работы источника
-        /// </summary>
-        void EmulateSource();
+        
     }
 }
