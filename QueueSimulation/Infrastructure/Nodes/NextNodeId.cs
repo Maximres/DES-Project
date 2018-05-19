@@ -6,24 +6,24 @@ using System.Threading.Tasks;
 
 namespace QueueSimulation.Infrastructure.Nodes
 {
-    internal sealed class GetNextNodeId
+    internal sealed class NextNodeId
     {
-        private static GetNextNodeId _instance;
+        private static NextNodeId _instance;
         private static int counter;
         private static object locker = new object();
 
-        private GetNextNodeId()
+        private NextNodeId()
         {
             counter = 0;
         }
 
-        public static GetNextNodeId GetInstance()
+        public static NextNodeId GetInstance()
         {
             if (_instance == null)
             {
                 lock (locker)
                 {
-                    _instance = new GetNextNodeId();
+                    _instance = new NextNodeId();
                 }
                 
             }

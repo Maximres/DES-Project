@@ -14,5 +14,7 @@ namespace QueueSimulation.BL.Abstract
         /// Происходит, когда станок получает объект.
         /// </summary>
         event EventHandler<ProductEngagedEventArgs<T>> OnEnqueue;
+
+        IDequeueable<T> PortIn { get; set; }
     }
 }

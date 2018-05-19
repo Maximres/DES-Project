@@ -57,6 +57,9 @@
     <Compile Include="Abstract\ISource.cs" />
     <Compile Include="Concrete\Conveyors\MainConveyor.cs" />
     <Compile Include="Concrete\Machines\FirstMachine.cs" />
+    <Compile Include="Concrete\Machines\FourthMachine.cs" />
+    <Compile Include="Concrete\Machines\SecondMachine.cs" />
+    <Compile Include="Concrete\Machines\ThirdMachine.cs" />
     <Compile Include="Concrete\Products\MintBoxProduct.cs" />
     <Compile Include="Concrete\Products\OrangeBoxProduct.cs" />
     <Compile Include="Concrete\Products\RedBoxProduct.cs" />
@@ -67,7 +70,6 @@
     <Compile Include="Objects\ContainerBase.cs" />
     <Compile Include="Objects\ConveyorBase.cs" />
     <Compile Include="Objects\MachineBase.cs" />
-    <Compile Include="Objects\OwnQueueBase.cs" />
     <Compile Include="Objects\ProductBase.cs" />
     <Compile Include="Infrastructure\ProductTypes.cs" />
     <Compile Include="Objects\SeedBase.cs" />

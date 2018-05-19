@@ -14,5 +14,7 @@ namespace QueueSimulation.BL.Abstract
         /// Происходит, когда станок выпускает объект.
         /// </summary>
         event EventHandler<ProductEngagedEventArgs<T>> OnDequeue;
+
+        IDequeueable<T> PorOut { get; set; }
     }
 }

@@ -24,6 +24,11 @@ namespace QueueSimulation.BL.Objects
         public event EventHandler<ProductEngagedEventArgs<T>> OnEnqueue = delegate { };
         public event EventHandler<ProductEngagedEventArgs<T>> OnDequeue = delegate { };
 
+        public SourceBase()
+        {
+            _productsQueue = new Queue<T>();
+        }
+
         /// <summary>
         /// Создает коллекцию одинаковых объектов и возвращает их полную копию.
         /// </summary>
@@ -68,12 +73,10 @@ namespace QueueSimulation.BL.Objects
             //    throw new ArgumentNullException(nameof(PortOut));
             //}
 
-            if (IsEmpty == false)
-            {
-                var temp = this._productsQueue.Dequeue();
-                OnDequeue(this, new ProductEngagedEventArgs<T>(_productsQueue.Dequeue()));
-            }
-            OnEmpty(this, EventArgs.Empty);
+                //var temp = this._productsQueue.Dequeue();
+            OnDequeue(this, new ProductEngagedEventArgs<T>(e.Product));
+            
+
         }
 
         public void Reset()
@@ -89,10 +92,17 @@ namespace QueueSimulation.BL.Objects
         public void Simulate()
         {
             TimeSpan timeSpan = DateTime.Now - Past;
-            if (timeSpan.Seconds >= ArrivalRate)
+            if (_productsQueue.Count > 0)
             {
-                Past = DateTime.Now;
-                Dequeue(this, new ProductEngagedEventArgs<T>(this._productsQueue.Dequeue()));
+                if (timeSpan.Seconds >= ArrivalRate)
+                {
+                    Past = DateTime.Now;
+                    Dequeue(this, new ProductEngagedEventArgs<T>(this._productsQueue.Dequeue()));
+                }
+            }
+            else
+            {
+                OnEmpty(this, EventArgs.Empty);
             }
         }
 
@@ -106,22 +116,18 @@ namespace QueueSimulation.BL.Objects
         /// Инициализирует очередь с определенным количеством размером.
         /// </summary>
         /// <param name="prodCount"></param>
-        public  SourceBase(int prodCount, T productType)
+        public SourceBase(int prodCount, T productType)
         {
             _productsCollection = Enumerable.Repeat(productType, prodCount);
             _productsQueue = new Queue<T>(_productsCollection);
+            Id = productType.Id;
+
         }
 
         static SourceBase()
         {
             Past = new DateTime();
         }
-
-        /// <summary>
-        /// Порт выхода объектов.
-        /// </summary>
-        /// <remarks>1 каждую секунду</remarks>
-        public abstract ConveyorBase<T> PortOut { get; set; }
 
         /// <summary>
         /// Определяет или задает скорость поступления объектов из источника.
@@ -136,6 +142,14 @@ namespace QueueSimulation.BL.Objects
         /// <summary>
         /// Определяет количество элементов в источнике.
         /// </summary>
-        public abstract int Count { get; }
+        public IDequeueable<T> PortIn { get => throw new NotSupportedException(); set => throw new NotSupportedException(); }
+        public IDequeueable<T> PorOut { get; set; }
+
+
+        public int Id { get; set; }
+
+        public int Count => _productsQueue.Count();
+
+        public string Name { get; set; } = "Source";
     }
 }

@@ -13,16 +13,16 @@ namespace QueueSimulation.BL.Concrete.Conveyors
 
         public override bool CanThrowProduct => CanThrow();
 
-        public override bool IsEmpty => !_productsQueue.Any();
+        public override bool IsEmpty => _productsQueue?.Count > 0 == false;
 
-        public override IDequeueable<T> PortOut { get; set; }
         public override double Length { get; set; } = 100;
         public override int Delay { get; set; } = 3;
         public override double Speed { get; set; } = 3;
 
-        public override bool CanTakeProduct => _productsQueue.Count < Capacity;
+        public override bool CanTakeProduct => _productsQueue.Count() < Capacity;
 
-        public override IDequeueable<T> PortIn { get; set; }
         public override int Capacity { get; set; } = 1000;
+
+        public override int Id { get; set; } = 7;
     }
 }

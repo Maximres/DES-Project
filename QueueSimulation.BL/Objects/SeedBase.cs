@@ -8,9 +8,19 @@ using QueueSimulation.BL.Infrastructure;
 
 namespace QueueSimulation.BL.Objects
 {
-    public abstract class SeedBase<T> : ContainerBase<T> where T : ProductBase
+    public abstract class SeedBase<T> : ContainerBase<T>, ISimulation<T> where T : ProductBase
     {
         public abstract bool CanSeedObject { get; set; }
+        public IDequeueable<T> PortIn { get; set; }
+        public IDequeueable<T> PorOut { get; set; }
+
+        public int Count => 0;
+
+        public string Name { get; set; } = "Seed";
+
+        public event EventHandler OnEmpty = delegate { };
+        public event EventHandler<ProductEngagedEventArgs<T>> OnEnqueue = delegate { };
+        public event EventHandler<ProductEngagedEventArgs<T>> OnDequeue = delegate { };
 
         public abstract void SeedObject(T product);
 
@@ -21,8 +31,33 @@ namespace QueueSimulation.BL.Objects
 
         public override void AddNode(IDequeueable<T> node)
         {
+            if (PortIn != null)
+            {
+                RemoveNode(node);
+            }
+            node.PorOut = this;
             PortIn = node;
             node.OnDequeue += SeedObject;
+        }
+
+        public override void RemoveNode(IDequeueable<T> node)
+        {
+            base.RemoveNode(node);
+        }
+
+        public void Simulate()
+        {
+            //Seed automatically dispose every product that gets from objects
+        }
+
+        public void Dequeue(object sender, ProductEngagedEventArgs<T> e)
+        {
+            throw new NotSupportedException();
+        }
+
+        public void Enqueue(object sender, ProductEngagedEventArgs<T> e)
+        {
+            throw new NotSupportedException();
         }
     }
 }

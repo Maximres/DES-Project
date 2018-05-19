@@ -30,13 +30,13 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("Продукт1", 4);
-            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("Продукт2", 6);
-            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem("Продукт3", 5);
-            System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem("Станок1", 0);
-            System.Windows.Forms.ListViewItem listViewItem5 = new System.Windows.Forms.ListViewItem("Станок2", 1);
-            System.Windows.Forms.ListViewItem listViewItem6 = new System.Windows.Forms.ListViewItem("Станок3", 2);
-            System.Windows.Forms.ListViewItem listViewItem7 = new System.Windows.Forms.ListViewItem("Станок4", 3);
+            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("Продукт1", 0);
+            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("Продукт2", 1);
+            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem("Продукт3", 2);
+            System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem("Станок1", 3);
+            System.Windows.Forms.ListViewItem listViewItem5 = new System.Windows.Forms.ListViewItem("Станок2", 4);
+            System.Windows.Forms.ListViewItem listViewItem6 = new System.Windows.Forms.ListViewItem("Станок3", 5);
+            System.Windows.Forms.ListViewItem listViewItem7 = new System.Windows.Forms.ListViewItem("Станок4", 6);
             System.Windows.Forms.ListViewItem listViewItem8 = new System.Windows.Forms.ListViewItem("Конвейер", 7);
             this.menuPanel = new System.Windows.Forms.MenuStrip();
             this.файлToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -213,14 +213,16 @@
             // 
             this.MainImageList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("MainImageList.ImageStream")));
             this.MainImageList.TransparentColor = System.Drawing.Color.Transparent;
-            this.MainImageList.Images.SetKeyName(0, "drilling.png");
-            this.MainImageList.Images.SetKeyName(1, "machine(1).png");
-            this.MainImageList.Images.SetKeyName(2, "machine(3).png");
-            this.MainImageList.Images.SetKeyName(3, "machine.png");
-            this.MainImageList.Images.SetKeyName(4, "icons8-коробка-80(1).png");
-            this.MainImageList.Images.SetKeyName(5, "icons8-пакет-64(1).png");
-            this.MainImageList.Images.SetKeyName(6, "icons8-подержанный-80(1).png");
+            this.MainImageList.Images.SetKeyName(0, "icons8-коробка-80(1).png");
+            this.MainImageList.Images.SetKeyName(1, "icons8-подержанный-80(1).png");
+            this.MainImageList.Images.SetKeyName(2, "icons8-пакет-64(1).png");
+            this.MainImageList.Images.SetKeyName(3, "drilling.png");
+            this.MainImageList.Images.SetKeyName(4, "machine(1).png");
+            this.MainImageList.Images.SetKeyName(5, "machine(3).png");
+            this.MainImageList.Images.SetKeyName(6, "machine.png");
             this.MainImageList.Images.SetKeyName(7, "factory.png");
+            this.MainImageList.Images.SetKeyName(8, "warehouse.png");
+            this.MainImageList.Images.SetKeyName(9, "dashed-circle.png");
             // 
             // splitContainer2
             // 
