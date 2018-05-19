@@ -43,12 +43,38 @@ namespace QueueSimulation.BL.Objects
         public ConveyorBase()
         {
             Past = DateTime.Now;
+            _productsQueue = new Queue<T>();
         }
 
+        /// <summary>
+        /// Позволяет добавить в очередь выполнения симуляции вершину.
+        /// </summary>
+        /// <param name="node"></param>
         public override void AddNode(IDequeueable<T> node)
         {
-            PortIn = node;
-            node.OnDequeue += Enqueue;
+            if (PortIn == null)
+            {
+                node.PorOut = this;
+                PortIn = node;
+                node.OnDequeue += Enqueue;
+            } else
+            {
+                RemoveNode(node);
+                PortIn = node;
+                node.OnDequeue += Enqueue;
+            }
+
+        }
+
+        /// <summary>
+        /// Позволяет убрать из очереди симуляции вершину.
+        /// </summary>
+        /// <param name="node"></param>
+        public override void RemoveNode(IDequeueable<T> node)
+        {
+            node.PorOut = null;
+            PortIn = null;
+            node.OnDequeue -= Enqueue;
         }
 
         /// <summary>
@@ -102,15 +128,19 @@ namespace QueueSimulation.BL.Objects
         [ReadOnly(false)]
         [Description("Скорость")]
         public abstract double Speed { get; set; }
+        public IDequeueable<T> PortIn { get; set; }
+        public IDequeueable<T> PorOut { get; set; }
 
+        public int Count => _productsQueue.Count();
+
+        public string Name { get ; set ; }
 
         public void Dequeue(object sender, ProductEngagedEventArgs<T> e)
         {
-            if (PortIn == null)
+            if (PorOut == null)
             {
                 throw new ArgumentNullException(nameof(PortIn));
             }
-
 
             if (CanThrowProduct)
             {
@@ -147,23 +177,23 @@ namespace QueueSimulation.BL.Objects
         public void Simulate()
         {
             TimeSpan span = DateTime.Now - Past;
-            if (PortIn != null && CanThrowProduct)
+            if (CanThrowProduct == true)
             {
-                Dequeue(this, new ProductEngagedEventArgs<T>(_productsQueue.Dequeue()));
+                OnDequeue(this, new ProductEngagedEventArgs<T>(_productsQueue.Dequeue()));
                 Past = DateTime.Now;
             }
         }
 
         private int GetTime()
         {
-            var t = this.Length / Speed / _productsQueue.Count;
+            var t = this.Length / Speed / Capacity - _productsQueue.Count;
             return (int)t;
         }
 
         protected bool CanThrow()
         {
             span = DateTime.Now - Past;
-            if (span.Seconds >= (Delay + GetTime()))
+            if (false == IsEmpty && span.Seconds >= (Delay + GetTime()))
             {
                 Past = DateTime.Now;
                 return true;

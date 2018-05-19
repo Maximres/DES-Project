@@ -35,5 +35,11 @@ namespace QueueSimulation.BL.Abstract
         /// <param name="sender"></param>
         /// <param name="e"></param>
         void Enqueue(object sender, ProductEngagedEventArgs<T> e);
+
+        int Id { get; set; }
+
+        int Count { get; }
+
+        string Name { get; set; }
     }
 }

@@ -12,10 +12,9 @@ namespace QueueSimulation.BL.Concrete
     {
         public override bool CanSeedObject { get; set; } = true;
 
+        public override int Capacity { get; set; } = 1000;
 
-        public override IDequeueable<T> PortIn { get; set; }
-        public override int Capacity { get; set; } = 0;
-        public override IDequeueable<T> PortOut { get; set ; }
+        public override int Id { get; set; } = 9;
 
         public override void SeedObject(T product)
         {

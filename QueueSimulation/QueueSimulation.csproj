@@ -55,8 +55,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Infrastructure\Factory\IndustryFactory.cs" />
+    <Compile Include="Infrastructure\Factory\IndustryObjectFactory.cs" />
     <Compile Include="Infrastructure\NodeInsertedByUserEventArgs.cs" />
-    <Compile Include="Infrastructure\Nodes\GetNextNodeId.cs" />
+    <Compile Include="Infrastructure\Nodes\NextNodeId.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -96,6 +98,9 @@
       <Project>{01ca0e08-7901-44db-b028-77f7fde1a0ca}</Project>
       <Name>QueueSimulation.BL</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Core\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

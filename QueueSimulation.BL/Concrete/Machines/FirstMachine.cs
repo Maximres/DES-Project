@@ -13,29 +13,29 @@ using MathNet.Numerics.Random;
 
 namespace QueueSimulation.BL.Concrete.Machines
 {
-    public class FirstMachine<T> : MachineBase<T>, IMachine<T> where T : ProductBase
+    public class FirstMachine<T> : MachineBase<T> where T : ProductBase
     {
         public FirstMachine()
         {
             this._exponential = new Exponential(CrashRatePerProduct);
         }
 
-        public override IDequeueable<T> PortIn { get; set; }
-        public override IDequeueable<T> PortOut { get; set; } = null;
         public override double Delay { get; set; } = 3;
-        public override int Capacity { get; set; } = 0;
+        public override int Capacity { get; set; } = 1000;
 
-        public override bool IsBroken => false;
+        public override bool IsBroken => NotBroken();
 
         public override double InactiveTime { get; set; } = 5;
         public override int CrashRatePerProduct { get; set; } = 100;
 
-        public override bool CanTakeProduct => false;
+        public override bool CanTakeProduct => _productsQueue.Count < Capacity;
 
         public override double CrashChance { get; set; } = 0.1;
 
-        public override bool CanThrowProduct => true;
+        public override bool CanThrowProduct => CanThrow() && NotBroken();
 
+
+        public override int Id { get; set; } = 3;
     }
 
 }

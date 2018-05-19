@@ -1,4 +1,5 @@
 ﻿using QueueSimulation.BL.Abstract;
+using QueueSimulation.BL.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -14,30 +15,23 @@ namespace QueueSimulation.BL.Objects
         /// Добавляет вершину к объекту.
         /// </summary>
         /// <param name="node"></param>
-        public abstract void AddNode(IDequeueable<T> node);
+        public virtual void AddNode(IDequeueable<T> node)
+        {
+            throw new NotImplementedException();
+        }
 
-        /// <summary>
-        /// Порт входа объекта.
-        /// </summary>
-        [Browsable(true)]
-        [ReadOnly(true)]
-        [Description("Порт входа объекта")]
-        public abstract IDequeueable<T> PortIn { get; set; }
+        public virtual void RemoveNode(IDequeueable<T> node) => throw new NotImplementedException();
 
-        /// <summary>
-        /// Порт выхода объекта.
-        /// </summary>
-        [Browsable(true)]
-        [ReadOnly(true)]
-        [Description("Порт выхода объекта")]
-        public abstract IDequeueable<T> PortOut { get; set; }
-
-        /// <summary>
-        /// Определяет или задает вместительность конвейера.
-        /// </summary>
         [Browsable(true)]
         [ReadOnly(false)]
-        [Description("Вместительность конвейера")]
+        [Description("Вместительность объекта")]
         public abstract int Capacity { get; set; }
+
+        //[Browsable(true)]
+        //[ReadOnly(true)]
+        //[Description("Название объекта")]
+        //public abstract string Name { get; set; }
+
+        public abstract int Id { get; set; }
     }
 }
