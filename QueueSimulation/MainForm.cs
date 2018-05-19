@@ -365,7 +365,7 @@ namespace QueueSimulation
             gViewer.NeedToCalculateLayout = false;
             gViewer.Graph = gViewer.Graph;
             gViewer.NeedToCalculateLayout = true;
-            //gViewer.Graph = gViewer.Graph;
+            gViewer.Graph = gViewer.Graph;
         }
         #endregion
 
