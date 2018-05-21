@@ -10,6 +10,13 @@ namespace QueueSimulation.BL.Objects
 {
     public abstract class SeedBase<T> : ContainerBase<T>, ISimulation<T> where T : ProductBase
     {
+        int _count;
+
+        public SeedBase(int count)
+        {
+            _count = count;
+        }
+
         public abstract bool CanSeedObject { get; set; }
         public IDequeueable<T> PortIn { get; set; }
         public IDequeueable<T> PorOut { get; set; }
@@ -48,6 +55,11 @@ namespace QueueSimulation.BL.Objects
         public void Simulate()
         {
             //Seed automatically dispose every product that gets from objects
+            --_count;
+            if (_count <= 0)
+            {
+                OnEmpty(this, EventArgs.Empty);
+            }
         }
 
         public void Dequeue(object sender, ProductEngagedEventArgs<T> e)

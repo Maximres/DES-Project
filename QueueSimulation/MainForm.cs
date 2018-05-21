@@ -177,8 +177,8 @@ namespace QueueSimulation
         private void InitSequence(Graph graph)
         {
             var mintBox = _factory.CreateProduct("Продукт1") as MintBoxProduct;
-            Source = new Source<ProductBase>(20, mintBox);
-            Source.OnEmpty += Source_OnEmpty;
+            int elemts = 2;
+            Source = new Source<ProductBase>(elemts, mintBox);
             var conveyor1 = _factory.CreateConveyor();
             var first = _factory.CreateMachine("Станок1");
             var conveyor2 = _factory.CreateConveyor();
@@ -186,7 +186,8 @@ namespace QueueSimulation
             var conveyor3 = _factory.CreateConveyor();
             var third = _factory.CreateMachine("Станок3");
             var conveyor4 = _factory.CreateConveyor();
-            Seed = new Seed<ProductBase>();
+            Seed = new Seed<ProductBase>(elemts);
+            Seed.OnEmpty += Source_OnEmpty;
 
             Node sourceNode = new Node("Source")
             {
@@ -488,7 +489,15 @@ namespace QueueSimulation
 
         private void Source_OnEmpty(object sender, EventArgs e)
         {
+            foreach (var item in gViewer.Entities.Where(s => s.DrawingObject is Edge))
+            {
+                if (item is Edge edge)
+                {
+                    edge.LabelText = "0";
+                }
+            }
             TheTimer.Stop();
+            TheTimer.Enabled = false;
             MessageBox.Show("Источник пуст!");
         }
 
@@ -730,6 +739,7 @@ namespace QueueSimulation
                 //TheTimer.Enabled = true;
                 _past = DateTime.Now;
                 TheTimer.Start();
+                RedoLayout();
             }
             catch (ArgumentNullException nullExp)
             {
