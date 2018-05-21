@@ -152,23 +152,23 @@ namespace QueueSimulation.BL.Objects
             }
         }
 
-        public override void AddNode(IDequeueable<T> node)
-        {
-            if (PortIn != null)
-            {
-                RemoveNode(node);
-            }
-            node.PorOut = this;
-            PortIn = node;
-            node.OnDequeue += Enqueue;
-        }
+        //public override void JoinWithPrevious(IDequeueable<T> node)
+        //{
+        //    if (PortIn != null)
+        //    {
+        //        RemoveNode(node);
+        //    }
+        //    node.PorOut = this;
+        //    PortIn = node;
+        //    node.OnDequeue += Enqueue;
+        //}
 
-        public override void RemoveNode(IDequeueable<T> node)
-        {
-            PortIn = null;
-            node.OnDequeue -= Enqueue;
-            node.PorOut = null;
-        }
+        //public override void RemoveNode(IDequeueable<T> node)
+        //{
+        //    PortIn = null;
+        //    node.OnDequeue -= Enqueue;
+        //    node.PorOut = null;
+        //}
 
         protected bool NotBroken()
         {
@@ -207,5 +207,11 @@ namespace QueueSimulation.BL.Objects
             return false;
         }
 
+        public void JoinWithPrevious(IDequeueable<T> node)
+        {
+            node.PorOut = this;
+            PortIn = node;
+            node.OnDequeue += Enqueue;
+        }
     }
 }

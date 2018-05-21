@@ -299,7 +299,7 @@
             // 
             // TheTimer
             // 
-            this.TheTimer.Interval = 1000;
+            this.TheTimer.Interval = 5000;
             this.TheTimer.Tick += new System.EventHandler(this.TheTimer_Tick);
             // 
             // contextMenu

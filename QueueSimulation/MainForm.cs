@@ -30,8 +30,9 @@ namespace QueueSimulation
 {
     public partial class MainForm : Form
     {
-
-        Stopwatch stopwatch;
+        private event EventHandler EdgeJustAdded = delegate { };
+        TimeSpan _timeSpan;
+        DateTime _past;
         GViewer gViewer;
         static Random random = new Random();
         const float radiusRatio = 0.3f;
@@ -40,8 +41,12 @@ namespace QueueSimulation
         protected MSAGLPoint m_MouseLeftButtonDownPoint;
         IndustryFactory<ProductBase> _factory;
 
+        private static bool IsRecursion = false;
+
         Source<ProductBase> Source;
         Seed<ProductBase> Seed;
+
+        Microsoft.Msagl.Drawing.Label labelToChange;
 
         List<ISimulation<ProductBase>> _objectsSequence;
         List<ISimulation<ProductBase>> temp = new List<ISimulation<ProductBase>>();
@@ -61,8 +66,10 @@ namespace QueueSimulation
                 ContextMenuStrip = contextMenu,
             };
             //create a graph object 
+            EdgeJustAdded += MainForm_EdgeJustAdded;
             gViewer.EdgeAdded += GViewer_EdgeAdded;
             gViewer.GiveFeedback += GViewer_GiveFeedback;
+            gViewer.MouseWheel += GViewer_MouseWheel; ;
             (gViewer as IViewer).MouseDown += MainForm_MouseDown;
             (gViewer as IViewer).MouseUp += MainForm_MouseUp;
             (gViewer as IViewer).MouseMove += MainForm_MouseMove;
@@ -124,6 +131,18 @@ namespace QueueSimulation
 
         }
 
+        private void MainForm_EdgeJustAdded(object sender, EventArgs e)
+        {
+            RedoLayout();
+        }
+
+        private void GViewer_MouseWheel(object sender, MouseEventArgs e)
+        {
+            int delta = e.Delta;
+            if (delta != 0)
+                gViewer.ZoomF *= delta < 0 ? 0.9 : 1.1;
+        }
+
         #region Methods
         private void MainForm_ObjectUnderMouseCursorChanged(object sender, ObjectUnderMouseCursorChangedEventArgs e)
         {
@@ -151,18 +170,23 @@ namespace QueueSimulation
                 node.Attr.Shape = Shape.DrawFromGeometry;
                 node.DrawNodeDelegate = new DelegateToOverrideNodeRendering(DrawNode);
                 node.NodeBoundaryDelegate = new DelegateToSetNodeBoundary(GetNodeBoundary);
-                node.LabelText = "";
+                node.LabelText = "0";
             }
         }
 
         private void InitSequence(Graph graph)
         {
             var mintBox = _factory.CreateProduct("Продукт1") as MintBoxProduct;
-            Source = new Source<ProductBase>(2, mintBox);
+            Source = new Source<ProductBase>(20, mintBox);
             Source.OnEmpty += Source_OnEmpty;
-            _objectsSequence.Add(Source);
+            var conveyor1 = _factory.CreateConveyor();
+            var first = _factory.CreateMachine("Станок1");
+            var conveyor2 = _factory.CreateConveyor();
+            var second = _factory.CreateMachine("Станок2");
+            var conveyor3 = _factory.CreateConveyor();
+            var third = _factory.CreateMachine("Станок3");
+            var conveyor4 = _factory.CreateConveyor();
             Seed = new Seed<ProductBase>();
-            _objectsSequence.Add(Seed);
 
             Node sourceNode = new Node("Source")
             {
@@ -171,14 +195,72 @@ namespace QueueSimulation
 
             };
 
+            Node nodeConveyor1 = new Node("c1")
+            {
+                UserData = conveyor1,
+            };
+
+            Node nodeFirst = new Node("m1")
+            {
+                UserData = first,
+            };
+
+            Node nodeConveyor2 = new Node("c2")
+            {
+                UserData = conveyor2,
+            };
+
+            Node nodeSecond = new Node("m2")
+            {
+                UserData = second,
+            };
+
+            Node nodeConveyor3 = new Node("c3")
+            {
+                UserData = conveyor3,
+            };
+
+            Node nodeThird = new Node("m2=3")
+            {
+                UserData = third,
+            };
+
+            Node nodeConveyor4 = new Node("c4")
+            {
+                UserData = conveyor4,
+            };
             Node seedNode = new Node("Seed")
             {
                 UserData = Seed,
                 LabelText = Seed.Capacity.ToString()
             };
 
-            Edge sourceToSeed = new Edge(sourceNode, seedNode, ConnectionToGraph.Connected);
+            Edge sourceToc1 = new Edge(sourceNode, nodeConveyor1, ConnectionToGraph.Connected);
+            Edge c1Tom1 = new Edge(nodeConveyor1, nodeFirst, ConnectionToGraph.Connected);
+            Edge m1Toc2 = new Edge(nodeFirst, nodeConveyor2, ConnectionToGraph.Connected);
+            Edge c2Tom3 = new Edge(nodeConveyor2, nodeSecond, ConnectionToGraph.Connected);
+            Edge m3Toc4 = new Edge(nodeSecond, nodeConveyor3, ConnectionToGraph.Connected);
+            Edge c4Tom4 = new Edge(nodeConveyor3, nodeThird, ConnectionToGraph.Connected);
+            Edge m4Toc4 = new Edge(nodeThird, nodeConveyor4, ConnectionToGraph.Connected);
+            Edge c4Toseed = new Edge(nodeConveyor4, seedNode, ConnectionToGraph.Connected);
+
+            sourceToc1.LabelText = "0";
+            c1Tom1.LabelText = "0";
+            m1Toc2.LabelText = "0";
+            c2Tom3.LabelText = "0";
+            c4Tom4.LabelText = "0";
+            c4Toseed.LabelText = "0";
+            c4Toseed.LabelText = "0";
+            //labelToChange = sourceToSeed.Label;
+
             graph.AddNode(sourceNode);
+            graph.AddNode(nodeConveyor1);
+            graph.AddNode(nodeFirst);
+            graph.AddNode(nodeConveyor2);
+            graph.AddNode(nodeSecond);
+            graph.AddNode(nodeConveyor3);
+            graph.AddNode(nodeThird);
+            graph.AddNode(nodeConveyor4);
             graph.AddNode(seedNode);
         }
 
@@ -279,33 +361,64 @@ namespace QueueSimulation
         {
             try
             {
-
+                //RedoLayout();
+                _timeSpan = DateTime.Now - _past;
+                toolPanelTime.Text = _timeSpan.Minutes.ToString() + ":"+ _timeSpan.Seconds.ToString();
                 Simulation();
-                RedoLayout();
+
+                //RedoLayout();
+                //gViewer.Refresh();
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine(ex.Message + " ");
-                System.Diagnostics.Debug.WriteLine(ex.StackTrace);
-                throw;
+                MessageBox.Show(ex.Message);
             }
+        }
+
+        void GViewerOnMouseMove(Edge edge, string value)
+        {
+            if (edge.Label == null) return;
+            edge.Label.Text = /*MousePosition.ToString();*/value;
+
+            var rect = edge.Label.BoundingBox;
+            var font = new Font(edge.Label.FontName, (int)edge.Label.FontSize);
+            double width;
+            double height;
+            StringMeasure.MeasureWithFont(edge.Label.Text, font, out width, out height);
+
+            if (width <= 0)
+                //this is a temporary fix for win7 where Measure fonts return negative lenght for the string " "
+                StringMeasure.MeasureWithFont("a", font, out width, out height);
+
+            edge.Label.Width = width;
+            edge.Label.Height = height;
+            rect.Add(edge.Label.BoundingBox);
+            gViewer.Invalidate(gViewer.MapSourceRectangleToScreenRectangle(rect));
         }
 
         private void Simulation()
         {
             //TODO: start simulation
-            foreach (var item in gViewer.Entities)
+            foreach (var item in _objectsSequence)
             {
-                if (item.DrawingObject.UserData is ISimulation<ProductBase> obj)
+                item.Simulate();
+                Debug.WriteLine(item.Name + " " + item.Count);
+                foreach (var element in gViewer.Entities.Where(s => s.DrawingObject is Edge))
                 {
-                    obj.Simulate();
-                    continue;
-                }
-                if (item.DrawingObject is Edge edge)
-                {
-                    edge.LabelText = (edge?.SourceNode?.UserData as ISimulation<ProductBase>)?.Count.ToString() ?? "0";
+
+                    //if (item.DrawingObject.UserData is ISimulation<ProductBase> obj)
+                    //{
+                    //    obj.Simulate();
+                    //    continue;
+                    //}
+                    var edge = element.DrawingObject as Edge;
+                    //edge.LabelText = (edge?.SourceNode?.UserData as ISimulation<ProductBase>)?.Count.ToString() ?? "0";
+                    //gViewer.Invalidate(item);
+                    GViewerOnMouseMove(edge, (edge?.SourceNode?.UserData as ISimulation<ProductBase>)?.Count.ToString() ?? "0");
                 }
             }
+
+           
         }
 
         internal virtual Node InsertNode(MSAGLPoint center, object simulationObj)
@@ -352,7 +465,7 @@ namespace QueueSimulation
             node.Attr.Shape = Shape.DrawFromGeometry;
             node.DrawNodeDelegate = new DelegateToOverrideNodeRendering(DrawNode);
             node.NodeBoundaryDelegate = new DelegateToSetNodeBoundary(GetNodeBoundary);
-            node.LabelText = "";
+            node.LabelText = "0";
 
             IViewerNode dNode = gViewer.CreateIViewerNode(node, center, null);
             gViewer.AddNode(dNode, true);
@@ -366,6 +479,7 @@ namespace QueueSimulation
             gViewer.Graph = gViewer.Graph;
             gViewer.NeedToCalculateLayout = true;
             gViewer.Graph = gViewer.Graph;
+            gViewer.Refresh();
         }
         #endregion
 
@@ -459,26 +573,61 @@ namespace QueueSimulation
         /// <param name="e"></param>
         private void GViewer_EdgeAdded(object sender, EventArgs e)
         {
+            if (IsRecursion)
+            {
+                return;
+            }
+            bool itsFine = true;
             if (sender is Edge edge)
             {
+                if (edge.SourceNode.Equals(edge.TargetNode))
+                {
+                    DeleteEdge(edge);
+                    itsFine = false;
+                }
                 if (edge.SourceNode.InEdges is IEnumerable<Edge> inputEdges && inputEdges.Count() > 1)
                 {
                     DeleteEdge(edge);
+                    itsFine = false;
                 }
                 if (edge.SourceNode.OutEdges is IEnumerable<Edge> outputEdges && outputEdges.Count() > 1)
                 {
                     DeleteEdge(edge);
+                    itsFine = false;
                 }
                 var inEdge = edge.SourceNode.InEdges.FirstOrDefault();
-                var outEdge = edge.SourceNode.OutEdges.FirstOrDefault();
                 var targer = edge.TargetNode;
-                if (inEdge is Edge edge1 && outEdge is Edge edge2)
+                if (inEdge is Edge edge1)
                 {
                     if (edge1.SourceNode.Equals(targer))
                     {
                         DeleteEdge(edge);
+                        itsFine = false;
                     }
                 }
+
+                if (itsFine)
+                {
+                    //var source = edge.SourceNode;
+                    //var target = edge.TargetNode;
+                    //DeleteEdge(edge);
+                    //IsRecursion = true;
+                    //var theEdge = gViewer.AddEdge(source, targer, false);
+                    //IsRecursion = false;
+                    //gViewer.Refresh();
+                    //RedoLayout();
+                    GViewerOnMouseMove(edge, "228");
+
+
+                }
+
+                //DeleteEdge(edge);
+                //Edge createdEdge = new Edge(source, targer, ConnectionToGraph.Connected)
+                //{
+                //    LabelText = "0",
+                //};
+
+
             }
         }
 
@@ -491,17 +640,17 @@ namespace QueueSimulation
             //MainConveyor<ProductBase> mainConveyor = new MainConveyor<ProductBase>()
             //FirstMachine<ProductBase> firstMachine = new FirstMachine<ProductBase>(Source);
 
-            Source<ProductBase> source = new Source<ProductBase>(100, mintBox);
-            MainConveyor<ProductBase> mainConveyor = new MainConveyor<ProductBase>();
-            mainConveyor.AddNode(source);
-            FirstMachine<ProductBase> firstMachine = new FirstMachine<ProductBase>();
-            firstMachine.AddNode(mainConveyor);
-            Seed<ProductBase> seed = new Seed<ProductBase>();
-            seed.AddNode(firstMachine);
-            source.Simulate();
-            mainConveyor.Simulate();
-            firstMachine.Simulate();
-            seed.Simulate();
+            //Source<ProductBase> source = new Source<ProductBase>(100, mintBox);
+            //MainConveyor<ProductBase> mainConveyor = new MainConveyor<ProductBase>();
+            //mainConveyor.JoinWithPrevious(source);
+            //FirstMachine<ProductBase> firstMachine = new FirstMachine<ProductBase>();
+            //firstMachine.JoinWithPrevious(mainConveyor);
+            //Seed<ProductBase> seed = new Seed<ProductBase>();
+            //seed.JoinWithPrevious(firstMachine);
+            //source.Simulate();
+            //mainConveyor.Simulate();
+            //firstMachine.Simulate();
+            //seed.Simulate();
         }
 
         //TODO: реализовать отображение свойств
@@ -544,33 +693,74 @@ namespace QueueSimulation
                 GetSequence(node.OutEdges.First().TargetNode, ref simulations);
                 simulations.Add(node.UserData as ISimulation<ProductBase>);
             }
-          
+
         }
 
         private void toolStripButton1_Click(object sender, EventArgs e)
         {
-            var source = gViewer.Entities.Select(s => s.DrawingObject).FirstOrDefault(s => s.UserData is Source<ProductBase>) as Node;
-            var seed = gViewer.Entities.Select(s => s.DrawingObject).FirstOrDefault(s => s.UserData is Seed<ProductBase>);
-            _objectsSequence.Clear();
-            GetSequence(source, ref _objectsSequence);
-            _objectsSequence.Reverse();
-            TheTimer.Enabled = true;
-            TheTimer.Start();
+
+            try
+            {
+                var source = gViewer.Entities.Select(s => s.DrawingObject).FirstOrDefault(s => s.UserData is Source<ProductBase>) as Node;
+                //var seed = gViewer.Entities.Select(s => s.DrawingObject).FirstOrDefault(s => s.UserData is Seed<ProductBase>);
+                _objectsSequence.Clear();
+                GetSequence(source, ref _objectsSequence);
+                _objectsSequence.Reverse();
+                if (_objectsSequence is null || _objectsSequence.Count < 2)
+                {
+                    throw new ArgumentNullException("Последовательность не может быть пуста");
+                }
+                if (_objectsSequence.FirstOrDefault() is Source<ProductBase> == false)
+                {
+                    throw new ArgumentNullException("Генератор продуктов должен начинать последовательность");
+                }
+                if (_objectsSequence.LastOrDefault() is Seed<ProductBase> == false)
+                {
+                    throw new ArgumentNullException("Утилизатор продуктов должен заканчивать последовательность");
+                }
+
+                for (int current = 0, next = 1; current < _objectsSequence.Count; current++, next++)
+                {
+                    if (next < _objectsSequence.Count)
+                    {
+                        _objectsSequence[next].JoinWithPrevious(_objectsSequence[current]);
+                    }
+                }
+
+                //TheTimer.Enabled = true;
+                _past = DateTime.Now;
+                TheTimer.Start();
+            }
+            catch (ArgumentNullException nullExp)
+            {
+                MessageBox.Show(nullExp.ParamName, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            catch (ArgumentException argExp)
+            {
+                MessageBox.Show(argExp.ParamName, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Возникла неопределенная ошибка", "Unexpected Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
 
         }
 
         private void toolStripButton4_Click(object sender, EventArgs e)
         {
-            TheTimer.Enabled = false;
+            //TheTimer.Enabled = false;
         }
 
         private void toolStripButton2_Click(object sender, EventArgs e)
         {
-            TheTimer.Enabled = false;
+            //TheTimer.Enabled = false;
             TheTimer.Stop();
         }
 
-        
+
 
         private void contextItemDeleteSelectedElements_Click(object sender, EventArgs e)
         {

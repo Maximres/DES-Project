@@ -112,6 +112,13 @@ namespace QueueSimulation.BL.Objects
             throw new NotSupportedException();
         }
 
+        public void JoinWithPrevious(IDequeueable<T> node)
+        {
+            node.PorOut = this;
+            PortIn = node;
+            node.OnDequeue += Enqueue;
+        }
+
         /// <summary>
         /// Инициализирует очередь с определенным количеством размером.
         /// </summary>

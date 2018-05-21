@@ -29,21 +29,21 @@ namespace QueueSimulation.BL.Objects
             SeedObject(e.Product);
         }
 
-        public override void AddNode(IDequeueable<T> node)
-        {
-            if (PortIn != null)
-            {
-                RemoveNode(node);
-            }
-            node.PorOut = this;
-            PortIn = node;
-            node.OnDequeue += SeedObject;
-        }
+        //public override void JoinWithPrevious(IDequeueable<T> node)
+        //{
+        //    if (PortIn != null)
+        //    {
+        //        RemoveNode(node);
+        //    }
+        //    node.PorOut = this;
+        //    PortIn = node;
+        //    node.OnDequeue += SeedObject;
+        //}
 
-        public override void RemoveNode(IDequeueable<T> node)
-        {
-            base.RemoveNode(node);
-        }
+        //public override void RemoveNode(IDequeueable<T> node)
+        //{
+        //    base.RemoveNode(node);
+        //}
 
         public void Simulate()
         {
@@ -58,6 +58,13 @@ namespace QueueSimulation.BL.Objects
         public void Enqueue(object sender, ProductEngagedEventArgs<T> e)
         {
             throw new NotSupportedException();
+        }
+
+        public void JoinWithPrevious(IDequeueable<T> node)
+        {
+            node.PorOut = this;
+            PortIn = node;
+            node.OnDequeue += SeedObject;
         }
     }
 }

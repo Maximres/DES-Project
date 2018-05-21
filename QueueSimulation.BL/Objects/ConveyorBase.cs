@@ -50,32 +50,32 @@ namespace QueueSimulation.BL.Objects
         /// Позволяет добавить в очередь выполнения симуляции вершину.
         /// </summary>
         /// <param name="node"></param>
-        public override void AddNode(IDequeueable<T> node)
-        {
-            if (PortIn == null)
-            {
-                node.PorOut = this;
-                PortIn = node;
-                node.OnDequeue += Enqueue;
-            } else
-            {
-                RemoveNode(node);
-                PortIn = node;
-                node.OnDequeue += Enqueue;
-            }
+        //public override void JoinWithPrevious(IDequeueable<T> node)
+        //{
+        //    if (PortIn == null)
+        //    {
+        //        node.PorOut = this;
+        //        PortIn = node;
+        //        node.OnDequeue += Enqueue;
+        //    } else
+        //    {
+        //        RemoveNode(node);
+        //        PortIn = node;
+        //        node.OnDequeue += Enqueue;
+        //    }
 
-        }
+        //}
 
         /// <summary>
         /// Позволяет убрать из очереди симуляции вершину.
         /// </summary>
         /// <param name="node"></param>
-        public override void RemoveNode(IDequeueable<T> node)
-        {
-            node.PorOut = null;
-            PortIn = null;
-            node.OnDequeue -= Enqueue;
-        }
+        //public override void RemoveNode(IDequeueable<T> node)
+        //{
+        //    node.PorOut = null;
+        //    PortIn = null;
+        //    node.OnDequeue -= Enqueue;
+        //}
 
         /// <summary>
         /// Определяет, можно ли добавить продукт на конвейер.
@@ -199,6 +199,13 @@ namespace QueueSimulation.BL.Objects
                 return true;
             }
             return false;
+        }
+
+        public void JoinWithPrevious(IDequeueable<T> node)
+        {
+            node.PorOut = this;
+            PortIn = node;
+            node.OnDequeue += Enqueue;
         }
     }
 }

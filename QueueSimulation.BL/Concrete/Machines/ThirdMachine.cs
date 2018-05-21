@@ -19,13 +19,13 @@ namespace QueueSimulation.BL.Concrete.Machines
 
         public override bool CanThrowProduct => CanThrow() && NotBroken();
 
-        public override double Delay { get; set; } = 7;
+        public override double Delay { get; set; } = 1;
 
         public override bool IsBroken => NotBroken();
 
         public override double InactiveTime { get; set; } = 4;
         public override double CrashChance { get; set; } = 0.12;
-        public override int CrashRatePerProduct { get; set; } = 80;
+        public override int CrashRatePerProduct { get; set; } = 800;
         public override int Capacity { get; set; } = 1000;
 
         public override int Id { get; set; } = 5;
