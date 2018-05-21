@@ -20,13 +20,13 @@ namespace QueueSimulation.BL.Concrete.Machines
             this._exponential = new Exponential(CrashRatePerProduct);
         }
 
-        public override double Delay { get; set; } = 3;
+        public override double Delay { get; set; } = 2;
         public override int Capacity { get; set; } = 1000;
 
         public override bool IsBroken => NotBroken();
 
-        public override double InactiveTime { get; set; } = 5;
-        public override int CrashRatePerProduct { get; set; } = 100;
+        public override double InactiveTime { get; set; } = 2;
+        public override int CrashRatePerProduct { get; set; } = 1000;
 
         public override bool CanTakeProduct => _productsQueue.Count < Capacity;
 

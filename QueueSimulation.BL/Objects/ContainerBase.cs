@@ -15,12 +15,12 @@ namespace QueueSimulation.BL.Objects
         /// Добавляет вершину к объекту.
         /// </summary>
         /// <param name="node"></param>
-        public virtual void AddNode(IDequeueable<T> node)
-        {
-            throw new NotImplementedException();
-        }
+        //public virtual void JoinWithPrevious(IDequeueable<T> node)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
-        public virtual void RemoveNode(IDequeueable<T> node) => throw new NotImplementedException();
+        //public virtual void RemoveNode(IDequeueable<T> node) => throw new NotImplementedException();
 
         [Browsable(true)]
         [ReadOnly(false)]

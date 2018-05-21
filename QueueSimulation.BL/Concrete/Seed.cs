@@ -10,6 +10,11 @@ namespace QueueSimulation.BL.Concrete
 {
     public class Seed<T> : SeedBase<T> where T : ProductBase
     {
+        public Seed(int count):base(count)
+        {
+
+        }
+
         public override bool CanSeedObject { get; set; } = true;
 
         public override int Capacity { get; set; } = 1000;

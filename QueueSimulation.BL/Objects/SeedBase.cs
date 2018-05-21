@@ -10,6 +10,13 @@ namespace QueueSimulation.BL.Objects
 {
     public abstract class SeedBase<T> : ContainerBase<T>, ISimulation<T> where T : ProductBase
     {
+        int _count;
+
+        public SeedBase(int count)
+        {
+            _count = count;
+        }
+
         public abstract bool CanSeedObject { get; set; }
         public IDequeueable<T> PortIn { get; set; }
         public IDequeueable<T> PorOut { get; set; }
@@ -29,25 +36,30 @@ namespace QueueSimulation.BL.Objects
             SeedObject(e.Product);
         }
 
-        public override void AddNode(IDequeueable<T> node)
-        {
-            if (PortIn != null)
-            {
-                RemoveNode(node);
-            }
-            node.PorOut = this;
-            PortIn = node;
-            node.OnDequeue += SeedObject;
-        }
+        //public override void JoinWithPrevious(IDequeueable<T> node)
+        //{
+        //    if (PortIn != null)
+        //    {
+        //        RemoveNode(node);
+        //    }
+        //    node.PorOut = this;
+        //    PortIn = node;
+        //    node.OnDequeue += SeedObject;
+        //}
 
-        public override void RemoveNode(IDequeueable<T> node)
-        {
-            base.RemoveNode(node);
-        }
+        //public override void RemoveNode(IDequeueable<T> node)
+        //{
+        //    base.RemoveNode(node);
+        //}
 
         public void Simulate()
         {
             //Seed automatically dispose every product that gets from objects
+            --_count;
+            if (_count <= 0)
+            {
+                OnEmpty(this, EventArgs.Empty);
+            }
         }
 
         public void Dequeue(object sender, ProductEngagedEventArgs<T> e)
@@ -58,6 +70,13 @@ namespace QueueSimulation.BL.Objects
         public void Enqueue(object sender, ProductEngagedEventArgs<T> e)
         {
             throw new NotSupportedException();
+        }
+
+        public void JoinWithPrevious(IDequeueable<T> node)
+        {
+            node.PorOut = this;
+            PortIn = node;
+            node.OnDequeue += SeedObject;
         }
     }
 }

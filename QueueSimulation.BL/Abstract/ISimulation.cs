@@ -41,5 +41,7 @@ namespace QueueSimulation.BL.Abstract
         int Count { get; }
 
         string Name { get; set; }
+
+         void JoinWithPrevious(IDequeueable<T> node);
     }
 }
