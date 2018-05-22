@@ -33,29 +33,15 @@ namespace QueueSimulation.BL.Objects
 
         private void SeedObject(object sender, ProductEngagedEventArgs<T> e)
         {
+            --_count;
             SeedObject(e.Product);
+            System.Diagnostics.Debug.WriteLine(_count);
         }
 
-        //public override void JoinWithPrevious(IDequeueable<T> node)
-        //{
-        //    if (PortIn != null)
-        //    {
-        //        RemoveNode(node);
-        //    }
-        //    node.PorOut = this;
-        //    PortIn = node;
-        //    node.OnDequeue += SeedObject;
-        //}
-
-        //public override void RemoveNode(IDequeueable<T> node)
-        //{
-        //    base.RemoveNode(node);
-        //}
 
         public void Simulate()
         {
             //Seed automatically dispose every product that gets from objects
-            --_count;
             if (_count <= 0)
             {
                 OnEmpty(this, EventArgs.Empty);

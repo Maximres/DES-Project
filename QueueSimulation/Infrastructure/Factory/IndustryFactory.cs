@@ -15,23 +15,55 @@ namespace QueueSimulation
     {
         NextNodeId NodeId = NextNodeId.GetInstance();
 
-        public override ConveyorBase<T> CreateConveyor()
+        public override Conveyor<T> CreateConveyor()
         {
-            return new MainConveyor<T>() { Name = "c"+NodeId.GetNextId() };
+            return new Conveyor<T>() { Name = "c"+NodeId.GetNextId() };
         }
 
-        public override MachineBase<T> CreateMachine(string machineName)
+        public override Machine<T> CreateMachine(string machineName)
         {
             switch (machineName)
             {
                 case "Станок1":
-                    return new FirstMachine<T>() { Name = "m" + NodeId.GetNextId() };
+                    return new Machine<T>()
+                    {
+                        Name = "m" + NodeId.GetNextId(),
+                        Id = 3,
+                        CrashChance = 0.1,
+                        Delay = 3,
+                        InactiveTime = 4,
+                        CrashRatePerProduct = 100
+                    };
                 case "Станок2":
-                    return new SecondMachine<T>() { Name = "m" + NodeId.GetNextId() };
+                    return new Machine<T>()
+                    {
+                        Name = "m" + NodeId.GetNextId(),
+                        Id = 4,
+                        CrashChance = 0.15,
+                        Delay = 3,
+                        InactiveTime = 4,
+                        CrashRatePerProduct = 100
+                    };
                 case "Станок3":
-                    return new ThirdMachine<T>() { Name = "m" + NodeId.GetNextId() };
+                    return new Machine<T>()
+                    {
+                        Name = "m" + NodeId.GetNextId(),
+                        Id = 3,
+                        CrashChance = 0.1,
+                        Delay = 2,
+                        InactiveTime = 5,
+                        CrashRatePerProduct = 100
+                    };
                 case "Станок4":
-                    return new FourthMachine<T>() { Name = "m" + NodeId.GetNextId() };
+                    return new Machine<T>()
+                    {
+                        Name = "m" + NodeId.GetNextId(),
+                        Id = 6,
+                        CrashChance = 0.1,
+                        Delay = 2,
+                        InactiveTime = 5,
+                        CrashRatePerProduct = 100
+                    };
                 case null:
                     throw new ArgumentNullException(nameof(machineName), "Name must not be NULL");
                 default:
@@ -44,15 +76,15 @@ namespace QueueSimulation
             switch (name)
             {
                 case "Конвейер":
-                    return new MainConveyor<T>() { Name = "c" + NodeId.GetNextId() };
+                    return CreateConveyor();
                 case "Станок1":
-                    return new FirstMachine<T>() { Name = "m" + NodeId.GetNextId() };
+                    return CreateMachine("Станок1");
                 case "Станок2":
-                    return new SecondMachine<T>() { Name = "m" + NodeId.GetNextId() };
+                    return CreateMachine("Станок2");
                 case "Станок3":
-                    return new ThirdMachine<T>() { Name = "m" + NodeId.GetNextId() };
+                    return CreateMachine("Станок3");
                 case "Станок4":
-                    return new FourthMachine<T>() { Name = "m" + NodeId.GetNextId() };
+                    return CreateMachine("Станок4");
                 case "Продукт1":
                     return new MintBoxProduct(0, "p" + NodeId.GetNextId(), new System.Drawing.Size(1, 2));
                 case "Продукт2":

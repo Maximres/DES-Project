@@ -14,36 +14,36 @@ namespace QueueSimulation.BL.Objects
     /// <summary>
     /// Станок
     /// </summary>
-    public abstract class MachineBase<T> : ContainerBase<T>, IMachine<T> where T : ProductBase
+    public class Machine<T> : ContainerBase<T>, IMachine<T> where T : ProductBase
     {
         /// <summary>
         /// Crash rate.
         /// </summary>
         protected Exponential _exponential;
-        static object locker = new object();
+        static readonly object locker = new object();
         bool _justCrashed = false;
         TimeSpan TimeStampCrash;
         protected DateTime Past { get; private set; }
         TimeSpan span;
+        DateTime spanAfterDequeue;
         protected Queue<T> _productsQueue { get; set; }
         private bool IsEmpty()
         {
             return _productsQueue == null || _productsQueue.Count() <= 0;
         }
 
-        public MachineBase()
+        public Machine()
         {
             Past = new DateTime();
             _productsQueue = new Queue<T>();
+            _exponential = new Exponential(1000);
+            spanAfterDequeue = DateTime.Now;
         }
 
         /// <summary>
         /// Определяет, можно ли добавить продукт на конвейер.
         /// </summary>
-        [Browsable(true)]
-        [ReadOnly(true)]
-        [Description("Определяет, можно ли добавить продуки на станок")]
-        public abstract bool CanTakeProduct { get; }
+        //public abstract bool CanTakeProduct { get; }
 
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace QueueSimulation.BL.Objects
         [Browsable(true)]
         [ReadOnly(true)]
         [Description("Определяет, можно ли передать продукт с конвейера")]
-        public abstract bool CanThrowProduct { get; }
+        public bool CanThrowProduct { get; }
 
         ///// <summary>
         ///// Порт выхода объекта.
@@ -67,8 +67,9 @@ namespace QueueSimulation.BL.Objects
         /// </summary>
         [Browsable(true)]
         [ReadOnly(false)]
-        [Description("Эмуляция работы станка. Задержка перед передачей объекта")]
-        public abstract double Delay { get; set; }
+        [Description("Задержка перед передачей объекта")]
+        [Range(0, 10000)]
+        public double Delay { get; set; }
 
         /// <summary>
         /// Определяет, сломан (неактивен) ли станок.
@@ -76,7 +77,7 @@ namespace QueueSimulation.BL.Objects
         [Browsable(true)]
         [ReadOnly(true)]
         [Description("Определяет, сломан (неактивен) ли станок")]
-        public abstract bool IsBroken { get; }
+        public bool IsBroken { get; }
 
         /// <summary>
         /// Получает или задает время бездействия во время поломки станка.
@@ -84,7 +85,7 @@ namespace QueueSimulation.BL.Objects
         [Browsable(true)]
         [ReadOnly(false)]
         [Description("Время бездействия во время поломки")]
-        public abstract double InactiveTime { get; set; }
+        public double InactiveTime { get; set; }
 
         /// <summary>
         /// Получает или задает шанс поломки (деактивности) станка.
@@ -93,21 +94,49 @@ namespace QueueSimulation.BL.Objects
         [Browsable(true)]
         [ReadOnly(false)]
         [Description("Шанс поломки (деактивности)")]
-        public abstract double CrashChance { get; set; }
+        public double CrashChance { get; set; }
 
         /// <summary>
         /// Получает или задает среднеквадратичное отклонение.
         /// </summary>
         [Browsable(true)]
         [ReadOnly(false)]
+        [Range(0.0, 1000)]
         [Description("Среднеквадратичное отклонение")]
-        public abstract int CrashRatePerProduct { get; set; }
+        public int CrashRatePerProduct { get; set; }
+
+        [Browsable(true)]
+        [ReadOnly(true)]
+        [Description("Входной станок/конвейер")]
         public IDequeueable<T> PortIn { get; set; }
+
+        [Browsable(true)]
+        [ReadOnly(true)]
+        [Description("Выходной станок/конвейер")]
         public IDequeueable<T> PorOut { get; set; }
 
         public int Count => _productsQueue.Count();
 
-        public string Name { get ; set; }
+        [Browsable(true)]
+        [ReadOnly(false)]
+        [Description("Определяет имя объекта")]
+        [RegularExpression(@"^[A-Za-z0-9]+$")]
+        public string Name { get; set; }
+
+        [Browsable(true)]
+        [ReadOnly(true)]
+        [Description("Определяет размерность объекта")]
+        public override int Capacity { get; set; } = 1000;
+
+        [Browsable(false)]
+        [ReadOnly(true)]
+        [Description("Идентификатор объекта")]
+        public override int Id { get; set; } = 3;
+
+        [Browsable(false)]
+        [ReadOnly(true)]
+        [Description("Определяет, можно ли взять продукт с конвейера")]
+        public override bool CanTakeProduct => _productsQueue.Count() < Capacity;
 
         //public IDequeueable<T> PorOut { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
@@ -123,7 +152,7 @@ namespace QueueSimulation.BL.Objects
                 throw new ArgumentNullException(nameof(PorOut));
             }
 
-                OnDequeue(sender, new ProductEngagedEventArgs<T>(e.Product));
+            OnDequeue(sender, new ProductEngagedEventArgs<T>(e.Product));
         }
 
         public void Enqueue(object sender, ProductEngagedEventArgs<T> e)
@@ -138,6 +167,10 @@ namespace QueueSimulation.BL.Objects
             {
                 lock (locker)
                 {
+                    if (spanAfterDequeue.Second > Delay)
+                    {
+                        Past = DateTime.Now;
+                    }
                     _productsQueue.Enqueue(e.Product);
                 }
                 this.OnEnqueue(this, new ProductEngagedEventArgs<T>(e.Product));
@@ -146,9 +179,17 @@ namespace QueueSimulation.BL.Objects
 
         public void Simulate()
         {
-            if (CanThrowProduct)
+            if (PorOut is ContainerBase<ProductBase> container && container.CanTakeProduct)
             {
-                Dequeue(this, new ProductEngagedEventArgs<T>(_productsQueue.Dequeue()));
+            }
+            if (CanThrow() /*&& NotBroken()*/)
+            {
+                //Dequeue(this, new ProductEngagedEventArgs<T>(_productsQueue.Dequeue()));
+                spanAfterDequeue = DateTime.Now;
+                OnDequeue(this, new ProductEngagedEventArgs<T>(_productsQueue.Dequeue()));
+#if DEBUG
+                //System.Diagnostics.Debug.WriteLine(TestValue++);
+#endif
             }
         }
 
@@ -179,7 +220,7 @@ namespace QueueSimulation.BL.Objects
                 if (_justCrashed == false)
                 {
                     _justCrashed = true;
-                    TimeStampCrash = new TimeSpan(0,0, (int)InactiveTime);
+                    TimeStampCrash = new TimeSpan(0, 0, (int)InactiveTime);
                     return false;
                 }
                 else
@@ -197,10 +238,9 @@ namespace QueueSimulation.BL.Objects
         protected bool CanThrow()
         {
             span = DateTime.Now - Past;
-            
+
             if (!IsEmpty() && span.Seconds > Delay)
             {
-                Past = DateTime.Now;
                 return true;
             }
 

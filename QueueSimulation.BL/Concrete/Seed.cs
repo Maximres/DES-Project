@@ -21,6 +21,8 @@ namespace QueueSimulation.BL.Concrete
 
         public override int Id { get; set; } = 9;
 
+        public override bool CanTakeProduct => true;
+
         public override void SeedObject(T product)
         {
             product = null;

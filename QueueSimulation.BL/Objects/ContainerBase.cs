@@ -33,5 +33,10 @@ namespace QueueSimulation.BL.Objects
         //public abstract string Name { get; set; }
 
         public abstract int Id { get; set; }
+
+        [Browsable(true)]
+        [ReadOnly(true)]
+        [Description("Определяет, можно ли добавить продуки на станок")]
+        public abstract bool CanTakeProduct { get; }
     }
 }

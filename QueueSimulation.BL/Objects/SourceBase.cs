@@ -92,18 +92,20 @@ namespace QueueSimulation.BL.Objects
         public void Simulate()
         {
             TimeSpan timeSpan = DateTime.Now - Past;
-            if (_productsQueue.Count > 0)
+            if (PorOut is ContainerBase<ProductBase> container && container.CanTakeProduct)
             {
-                if (timeSpan.Seconds >= ArrivalRate)
+                if (_productsQueue.Count > 0)
                 {
-                    Past = DateTime.Now;
-                    Dequeue(this, new ProductEngagedEventArgs<T>(this._productsQueue.Dequeue()));
+                    if (timeSpan.Seconds >= ArrivalRate)
+                    {
+                        Past = DateTime.Now;
+                        OnDequeue(this, new ProductEngagedEventArgs<T>(_productsQueue.Dequeue()));
+                    }
                 }
             }
-            else
-            {
-                OnEmpty(this, EventArgs.Empty);
-            }
+            
+            
+                //OnEmpty(this, EventArgs.Empty);
         }
 
 

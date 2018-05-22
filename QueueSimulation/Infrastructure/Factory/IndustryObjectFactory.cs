@@ -10,8 +10,8 @@ namespace QueueSimulation
     public abstract class IndustryObjectFactory<T> where T : ProductBase
     {
         public abstract ProductBase CreateProduct(string name);
-        public abstract MachineBase<T> CreateMachine(string name);
-        public abstract ConveyorBase<T> CreateConveyor();
+        public abstract Machine<T> CreateMachine(string name);
+        public abstract Conveyor<T> CreateConveyor();
         public abstract object CreateObject(string name);
     }
 }

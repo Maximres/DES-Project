@@ -15,7 +15,6 @@ namespace QueueSimulation.BL.Abstract
         /// </summary>
         void Simulate();
 
-        
 
         /// <summary>
         /// Происходит, когда в источнике заканчиваются объекты

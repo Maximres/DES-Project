@@ -25,6 +25,8 @@ using QueueSimulation.BL.Concrete.Machines;
 using QueueSimulation.BL.Concrete.Conveyors;
 using QueueSimulation.BL.Abstract;
 using QueueSimulation.BL.Concrete;
+using System.ComponentModel.DataAnnotations;
+using System.Reflection;
 
 namespace QueueSimulation
 {
@@ -76,6 +78,8 @@ namespace QueueSimulation
             (gViewer as IViewer).ObjectUnderMouseCursorChanged += MainForm_ObjectUnderMouseCursorChanged;
             gViewer.DragEnter += GViewer_DragEnter;
             gViewer.DragDrop += GViewer_DragDrop;
+            propertyGrid1.TextChanged += PropertyGrid1_TextChanged;
+            propertyGrid1.PropertyValueChanged += PropertyGrid1_PropertyValueChanged;
 
             Microsoft.Msagl.Drawing.Graph graph = new Graph("graph");
             //can generate an event at specific time
@@ -131,6 +135,33 @@ namespace QueueSimulation
 
         }
 
+        private void PropertyGrid1_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
+        {
+            PropertyGrid property = s as PropertyGrid;
+            var theItem = e.ChangedItem;
+            
+            ValidationContext validation = new ValidationContext(property.SelectedObject, null, null);
+            IList<ValidationResult> results = new List<ValidationResult>();
+            if (!Validator.TryValidateObject(property.SelectedObject, validation, results, true))
+            {
+                foreach (var item in results)
+                {
+                    MessageBox.Show(item.ErrorMessage);
+                }
+                var theItm = e.ChangedItem;
+                var propName = theItm.PropertyDescriptor.Name;
+                PropertyInfo propInf = property.SelectedObject.GetType().GetProperty(propName);
+                var oldValue = e.OldValue;
+                propInf.SetValue(property.SelectedObject, oldValue, null);
+                propertyGrid1.Refresh();
+            }
+        }
+
+        private void PropertyGrid1_TextChanged(object sender, EventArgs e)
+        {
+            
+        }
+
         private void MainForm_EdgeJustAdded(object sender, EventArgs e)
         {
             RedoLayout();
@@ -146,7 +177,7 @@ namespace QueueSimulation
         #region Methods
         private void MainForm_ObjectUnderMouseCursorChanged(object sender, ObjectUnderMouseCursorChangedEventArgs e)
         {
-
+            //toolPanelTime.Text = e.OldObject != null ? e.OldObject.DrawingObject.ToString() : "nothing";
         }
 
         private void MainForm_MouseMove(object sender, MsaglMouseEventArgs e)
@@ -179,20 +210,20 @@ namespace QueueSimulation
             var mintBox = _factory.CreateProduct("Продукт1") as MintBoxProduct;
             int elemts = 2;
             Source = new Source<ProductBase>(elemts, mintBox);
-            var conveyor1 = _factory.CreateConveyor();
-            var first = _factory.CreateMachine("Станок1");
-            var conveyor2 = _factory.CreateConveyor();
+            var conveyor1 = _factory.CreateMachine("Станок2");
+            var first = _factory.CreateMachine("Станок2");
+            var conveyor2 = _factory.CreateMachine("Станок2");
             var second = _factory.CreateMachine("Станок2");
-            var conveyor3 = _factory.CreateConveyor();
-            var third = _factory.CreateMachine("Станок3");
-            var conveyor4 = _factory.CreateConveyor();
+            var conveyor3 = _factory.CreateMachine("Станок2");
+            var third = _factory.CreateMachine("Станок2");
+            var conveyor4 = _factory.CreateMachine("Станок2");
             Seed = new Seed<ProductBase>(elemts);
             Seed.OnEmpty += Source_OnEmpty;
 
             Node sourceNode = new Node("Source")
             {
                 UserData = Source,
-                LabelText = Source.Count.ToString(),
+                LabelText = Source.Count.ToString()
 
             };
 
@@ -221,7 +252,7 @@ namespace QueueSimulation
                 UserData = conveyor3,
             };
 
-            Node nodeThird = new Node("m2=3")
+            Node nodeThird = new Node("m3")
             {
                 UserData = third,
             };
@@ -364,7 +395,7 @@ namespace QueueSimulation
             {
                 //RedoLayout();
                 _timeSpan = DateTime.Now - _past;
-                toolPanelTime.Text = _timeSpan.Minutes.ToString() + ":"+ _timeSpan.Seconds.ToString();
+                toolPanelTime.Text = _timeSpan.Minutes.ToString() + ":" + _timeSpan.Seconds.ToString();
                 Simulation();
 
                 //RedoLayout();
@@ -372,7 +403,9 @@ namespace QueueSimulation
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                //MessageBox.Show(ex.Message);
+                //TheTimer.Stop();
+                //return;
             }
         }
 
@@ -403,7 +436,7 @@ namespace QueueSimulation
             foreach (var item in _objectsSequence)
             {
                 item.Simulate();
-                Debug.WriteLine(item.Name + " " + item.Count);
+                //Debug.WriteLine(item.Name + " " + item.Count);
                 foreach (var element in gViewer.Entities.Where(s => s.DrawingObject is Edge))
                 {
 
@@ -418,8 +451,6 @@ namespace QueueSimulation
                     GViewerOnMouseMove(edge, (edge?.SourceNode?.UserData as ISimulation<ProductBase>)?.Count.ToString() ?? "0");
                 }
             }
-
-           
         }
 
         internal virtual Node InsertNode(MSAGLPoint center, object simulationObj)
@@ -433,25 +464,7 @@ namespace QueueSimulation
                         UserData = con
                     };
                     break;
-                case FirstMachine<ProductBase> fst:
-                    node = new Node(fst.Name)
-                    {
-                        UserData = fst
-                    };
-                    break;
-                case SecondMachine<ProductBase> snd:
-                    node = new Node(snd.Name)
-                    {
-                        UserData = snd
-                    };
-                    break;
-                case ThirdMachine<ProductBase> thrd:
-                    node = new Node(thrd.Name)
-                    {
-                        UserData = thrd
-                    };
-                    break;
-                case FourthMachine<ProductBase> frth:
+                case Machine<ProductBase> frth:
                     node = new Node(frth.Name)
                     {
                         UserData = frth
@@ -489,13 +502,6 @@ namespace QueueSimulation
 
         private void Source_OnEmpty(object sender, EventArgs e)
         {
-            foreach (var item in gViewer.Entities.Where(s => s.DrawingObject is Edge))
-            {
-                if (item is Edge edge)
-                {
-                    edge.LabelText = "0";
-                }
-            }
             TheTimer.Stop();
             TheTimer.Enabled = false;
             MessageBox.Show("Источник пуст!");
@@ -513,20 +519,8 @@ namespace QueueSimulation
                 var obj = _factory.CreateObject(viewItem.Text);
                 switch (obj)
                 {
-                    case MainConveyor<ProductBase> con:
-                        var nd = InsertNode(point, con);
-                        break;
-                    case FirstMachine<ProductBase> fst:
-                        InsertNode(point, fst);
-                        break;
-                    case SecondMachine<ProductBase> snd:
-                        InsertNode(point, snd);
-                        break;
-                    case ThirdMachine<ProductBase> thrd:
-                        InsertNode(point, thrd);
-                        break;
-                    case FourthMachine<ProductBase> frth:
-                        InsertNode(point, frth);
+                    case Machine<ProductBase> machine:
+                        InsertNode(point, machine);
                         break;
                     case MintBoxProduct mint:
                         Source.Id = mint.Id;
@@ -567,6 +561,11 @@ namespace QueueSimulation
             {
                 m_MouseRightButtonDownPoint = (gViewer).ScreenToSource(e);
             }
+            if (gViewer.ObjectUnderMouseCursor is DrawingObject drawing)
+            {
+                this.propertyGrid1.SelectedObject = Source;
+            }
+            
         }
 
         private void GViewer_GiveFeedback(object sender, GiveFeedbackEventArgs e)
@@ -645,21 +644,6 @@ namespace QueueSimulation
         private void MainForm_Load(object sender, EventArgs e)
         {
             MintBoxProduct mintBox = new MintBoxProduct(1, "mintbox", new Size(1, 2));
-            //Source<ProductBase> Source = new Source<ProductBase>(50, mintBox);
-            //MainConveyor<ProductBase> mainConveyor = new MainConveyor<ProductBase>()
-            //FirstMachine<ProductBase> firstMachine = new FirstMachine<ProductBase>(Source);
-
-            //Source<ProductBase> source = new Source<ProductBase>(100, mintBox);
-            //MainConveyor<ProductBase> mainConveyor = new MainConveyor<ProductBase>();
-            //mainConveyor.JoinWithPrevious(source);
-            //FirstMachine<ProductBase> firstMachine = new FirstMachine<ProductBase>();
-            //firstMachine.JoinWithPrevious(mainConveyor);
-            //Seed<ProductBase> seed = new Seed<ProductBase>();
-            //seed.JoinWithPrevious(firstMachine);
-            //source.Simulate();
-            //mainConveyor.Simulate();
-            //firstMachine.Simulate();
-            //seed.Simulate();
         }
 
         //TODO: реализовать отображение свойств
@@ -681,7 +665,8 @@ namespace QueueSimulation
 
             if (item != null)
             {
-                //show properies
+                var obj = _factory.CreateObject(item.Text);
+                propertyGrid1.SelectedObject = obj;
             }
         }
 
@@ -739,7 +724,7 @@ namespace QueueSimulation
                 //TheTimer.Enabled = true;
                 _past = DateTime.Now;
                 TheTimer.Start();
-                RedoLayout();
+                //RedoLayout();
             }
             catch (ArgumentNullException nullExp)
             {
