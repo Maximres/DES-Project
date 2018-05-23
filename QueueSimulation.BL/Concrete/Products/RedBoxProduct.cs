@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace QueueSimulation.BL.Concrete.Products
 {
+    [Serializable]
     public class RedBoxProduct : ProductBase
     {
         int _id;

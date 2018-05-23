@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace QueueSimulation.BL.Abstract
 {
-    public interface ISimulation<T> : IEnqueueable<T>, IDequeueable<T> where T : ProductBase
+    public interface ISimulation<T> : IEnqueueable<T>, IDequeueable<T>, IResetable where T : ProductBase
     {
         /// <summary>
         /// Эмуляция процесса работы.
@@ -41,6 +41,6 @@ namespace QueueSimulation.BL.Abstract
 
         string Name { get; set; }
 
-         void JoinWithPrevious(IDequeueable<T> node);
+         void JoinPrevious(IDequeueable<T> node);
     }
 }

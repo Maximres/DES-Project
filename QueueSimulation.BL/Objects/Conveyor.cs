@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace QueueSimulation.BL.Objects
 {
+    [Serializable]
     public class Conveyor<T> : ContainerBase<T>, ISimulation<T> where T : ProductBase
     {
         static readonly object locker = new object();
@@ -17,6 +18,7 @@ namespace QueueSimulation.BL.Objects
         protected Queue<T> _productsQueue { get; set; }
         protected DateTime Past { get; private set; }
         TimeSpan span;
+        DateTime spanAfterDequeue;
         public event EventHandler<ProductEngagedEventArgs<T>> OnDequeue = delegate { };
         public event EventHandler<ProductEngagedEventArgs<T>> OnEnqueue = delegate { };
         public event EventHandler OnEmpty = delegate { };
@@ -24,8 +26,9 @@ namespace QueueSimulation.BL.Objects
 
         public Conveyor()
         {
-            Past = DateTime.Now;
+            Past = new DateTime();
             _productsQueue = new Queue<T>();
+            spanAfterDequeue = DateTime.Now;
         }
 
         /// <summary>
@@ -44,20 +47,14 @@ namespace QueueSimulation.BL.Objects
         [Description("Определяет, пуст ли объект")]
         public bool IsEmpty { get; }
 
-
-
         /// <summary>
         /// Определяет или задает длину конвейера (в метрах).
         /// </summary>
         [Browsable(true)]
         [ReadOnly(false)]
         [Description("Длина конвейера")]
-        public double Length { get; set; }
-
-        /// <summary>
-        /// Расстояние между объектами конвейера
-        /// </summary>
-        //public abstract int Space { get; set; }
+        [Range(0, 10000)]
+        public double Length { get; set; } = 100;
 
         /// <summary>
         /// Определяет или задает задержка перед передачей объекта (в секундах).
@@ -65,8 +62,8 @@ namespace QueueSimulation.BL.Objects
         [Browsable(true)]
         [ReadOnly(false)]
         [Description("Задержка перед передачей объекта")]
-        [Range(0,10000)]
-        public int Delay { get; set; }
+        [Range(0, 1000)]
+        public int Delay { get; set; } = 3;
 
         /// <summary>
         /// Определяет или задает скорость движения объектов по конвейеру (в метрах на секунду).
@@ -74,7 +71,8 @@ namespace QueueSimulation.BL.Objects
         [Browsable(true)]
         [ReadOnly(false)]
         [Description("Скорость")]
-        public double Speed { get; set; }
+        [Range(0, 10000)]
+        public double Speed { get; set; } = 5;
 
         [Browsable(false)]
         public IDequeueable<T> PortIn { get; set; }
@@ -87,7 +85,7 @@ namespace QueueSimulation.BL.Objects
         [Browsable(true)]
         [ReadOnly(false)]
         [Description("Название объекта")]
-        public string Name { get; set; }
+        public string Name { get; set; } = "Matvey";
 
         [Browsable(true)]
         [ReadOnly(false)]
@@ -120,48 +118,59 @@ namespace QueueSimulation.BL.Objects
             {
                 lock (locker)
                 {
-                    //Past = DateTime.Now;
+                    if (spanAfterDequeue.Second > Delay)
+                    {
+                        Past = DateTime.Now;
+                    }
                     _productsQueue.Enqueue(e.Product);
-                    OnEnqueue(sender, e);
+                    //OnEnqueue(this, new ProductEngagedEventArgs<T>(e.Product));
                 }
             }
         }
 
         public void Simulate()
         {
-            if (PortIn is ContainerBase<ProductBase> container && container.CanTakeProduct)
+            if (PorOut is ContainerBase<ProductBase> container && container.CanTakeProduct)
             {
                 if (CanThrow())
                 {
+                    spanAfterDequeue = DateTime.Now;
                     OnDequeue(this, new ProductEngagedEventArgs<T>(_productsQueue.Dequeue()));
                     //Past = DateTime.Now;
                 }
-
             }
         }
 
         private int GetTime()
         {
-            var t = this.Length / Speed / Capacity - _productsQueue.Count;
+            var t = this.Length / Speed;
             return (int)t;
         }
 
         protected bool CanThrow()
         {
             span = DateTime.Now - Past;
-            if (false == IsEmpty && span.Seconds >= (Delay + GetTime()))
+            if (false == Empty() && span.Seconds > (Delay + GetTime()))
             {
-                //Past = DateTime.Now;
                 return true;
             }
             return false;
         }
 
-        public void JoinWithPrevious(IDequeueable<T> node)
+        public void JoinPrevious(IDequeueable<T> node)
         {
             node.PorOut = this;
             PortIn = node;
             node.OnDequeue += Enqueue;
+        }
+        private bool Empty()
+        {
+            return _productsQueue == null || _productsQueue.Count() <= 0;
+        }
+
+        public void Reset()
+        {
+            this._productsQueue = new Queue<T>();
         }
     }
 }

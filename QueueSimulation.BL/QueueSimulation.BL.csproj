@@ -53,6 +53,7 @@
     <Compile Include="Abstract\IEnqueueable.cs" />
     <Compile Include="Abstract\IMachine.cs" />
     <Compile Include="Abstract\IProduction.cs" />
+    <Compile Include="Abstract\IResetable.cs" />
     <Compile Include="Abstract\ISimulation.cs" />
     <Compile Include="Abstract\ISource.cs" />
     <Compile Include="Concrete\Conveyors\MainConveyor.cs" />
@@ -65,11 +66,15 @@
     <Compile Include="Concrete\Products\RedBoxProduct.cs" />
     <Compile Include="Concrete\Seed.cs" />
     <Compile Include="Concrete\Sources\Source.cs" />
+    <Compile Include="Factories\IndustryFactory.cs" />
+    <Compile Include="Factories\IndustryObjectFactory.cs" />
+    <Compile Include="Factories\Settings\IndustryObjectsSetter.cs" />
     <Compile Include="Infrastructure\ProductReleasedEventArgs.cs" />
     <Compile Include="Infrastructure\ProductTypeConveter.cs" />
+    <Compile Include="Nodes\NextNodeId.cs" />
     <Compile Include="Objects\ContainerBase.cs" />
-    <Compile Include="Objects\ConveyorBase.cs" />
-    <Compile Include="Objects\MachineBase.cs" />
+    <Compile Include="Objects\Conveyor.cs" />
+    <Compile Include="Objects\Machine.cs" />
     <Compile Include="Objects\ProductBase.cs" />
     <Compile Include="Infrastructure\ProductTypes.cs" />
     <Compile Include="Objects\SeedBase.cs" />

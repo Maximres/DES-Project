@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace QueueSimulation.Infrastructure.Nodes
 {
-    internal sealed class NextNodeId
+    public sealed class NextNodeId
     {
         private static NextNodeId _instance;
         private static int counter;

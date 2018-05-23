@@ -45,15 +45,21 @@
             this.обАвтореToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolsPanel = new System.Windows.Forms.ToolStrip();
             this.btnStart = new System.Windows.Forms.ToolStripButton();
+            this.toolStripItemsCount = new System.Windows.Forms.ToolStripTextBox();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.btnPause = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.btnStop = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.btnInterval = new System.Windows.Forms.ToolStripButton();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.listModelObjects = new System.Windows.Forms.ListView();
             this.MainImageList = new System.Windows.Forms.ImageList(this.components);
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.viewerPanel = new System.Windows.Forms.Panel();
+            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
+            this.nodesWithCountList = new System.Windows.Forms.ListBox();
             this.statusPanel = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolPanelTime = new System.Windows.Forms.ToolStripStatusLabel();
@@ -75,6 +81,7 @@
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
+            this.tableLayoutPanel1.SuspendLayout();
             this.statusPanel.SuspendLayout();
             this.contextMenu.SuspendLayout();
             this.SuspendLayout();
@@ -122,8 +129,12 @@
             this.toolsPanel.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.toolsPanel.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.btnStart,
+            this.toolStripItemsCount,
+            this.toolStripSeparator2,
             this.btnPause,
+            this.toolStripSeparator3,
             this.btnStop,
+            this.toolStripSeparator4,
             this.btnInterval});
             this.toolsPanel.Location = new System.Drawing.Point(0, 28);
             this.toolsPanel.Name = "toolsPanel";
@@ -140,6 +151,18 @@
             this.btnStart.Text = "Старт";
             this.btnStart.Click += new System.EventHandler(this.toolStripButton1_Click);
             // 
+            // toolStripItemsCount
+            // 
+            this.toolStripItemsCount.Name = "toolStripItemsCount";
+            this.toolStripItemsCount.Size = new System.Drawing.Size(50, 27);
+            this.toolStripItemsCount.Text = "10";
+            this.toolStripItemsCount.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.toolStripItemsCount_KeyPress);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 27);
+            // 
             // btnPause
             // 
             this.btnPause.Image = ((System.Drawing.Image)(resources.GetObject("btnPause.Image")));
@@ -149,6 +172,11 @@
             this.btnPause.Text = "Pause";
             this.btnPause.Click += new System.EventHandler(this.toolStripButton4_Click);
             // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 27);
+            // 
             // btnStop
             // 
             this.btnStop.Image = ((System.Drawing.Image)(resources.GetObject("btnStop.Image")));
@@ -157,6 +185,11 @@
             this.btnStop.Size = new System.Drawing.Size(66, 24);
             this.btnStop.Text = "Стоп";
             this.btnStop.Click += new System.EventHandler(this.toolStripButton2_Click);
+            // 
+            // toolStripSeparator4
+            // 
+            this.toolStripSeparator4.Name = "toolStripSeparator4";
+            this.toolStripSeparator4.Size = new System.Drawing.Size(6, 27);
             // 
             // btnInterval
             // 
@@ -237,9 +270,9 @@
             // 
             // splitContainer2.Panel2
             // 
-            this.splitContainer2.Panel2.Controls.Add(this.propertyGrid1);
+            this.splitContainer2.Panel2.Controls.Add(this.tableLayoutPanel1);
             this.splitContainer2.Size = new System.Drawing.Size(1115, 573);
-            this.splitContainer2.SplitterDistance = 847;
+            this.splitContainer2.SplitterDistance = 801;
             this.splitContainer2.TabIndex = 1;
             // 
             // viewerPanel
@@ -248,16 +281,42 @@
             this.viewerPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.viewerPanel.Location = new System.Drawing.Point(0, 0);
             this.viewerPanel.Name = "viewerPanel";
-            this.viewerPanel.Size = new System.Drawing.Size(847, 573);
+            this.viewerPanel.Size = new System.Drawing.Size(801, 573);
             this.viewerPanel.TabIndex = 0;
+            // 
+            // tableLayoutPanel1
+            // 
+            this.tableLayoutPanel1.ColumnCount = 1;
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel1.Controls.Add(this.propertyGrid1, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this.nodesWithCountList, 0, 1);
+            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
+            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+            this.tableLayoutPanel1.RowCount = 2;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 45F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 55F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(310, 573);
+            this.tableLayoutPanel1.TabIndex = 0;
             // 
             // propertyGrid1
             // 
             this.propertyGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.propertyGrid1.Location = new System.Drawing.Point(0, 0);
+            this.propertyGrid1.Location = new System.Drawing.Point(3, 3);
             this.propertyGrid1.Name = "propertyGrid1";
-            this.propertyGrid1.Size = new System.Drawing.Size(264, 573);
-            this.propertyGrid1.TabIndex = 0;
+            this.propertyGrid1.Size = new System.Drawing.Size(304, 251);
+            this.propertyGrid1.TabIndex = 1;
+            // 
+            // nodesWithCountList
+            // 
+            this.nodesWithCountList.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.nodesWithCountList.Font = new System.Drawing.Font("Arial Black", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.nodesWithCountList.FormattingEnabled = true;
+            this.nodesWithCountList.ItemHeight = 28;
+            this.nodesWithCountList.Location = new System.Drawing.Point(3, 260);
+            this.nodesWithCountList.Name = "nodesWithCountList";
+            this.nodesWithCountList.Size = new System.Drawing.Size(304, 310);
+            this.nodesWithCountList.TabIndex = 2;
             // 
             // statusPanel
             // 
@@ -352,6 +411,7 @@
             this.MinimumSize = new System.Drawing.Size(800, 500);
             this.Name = "MainForm";
             this.Text = "DES";
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.menuPanel.ResumeLayout(false);
             this.menuPanel.PerformLayout();
@@ -366,6 +426,7 @@
             this.splitContainer2.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
+            this.tableLayoutPanel1.ResumeLayout(false);
             this.statusPanel.ResumeLayout(false);
             this.statusPanel.PerformLayout();
             this.contextMenu.ResumeLayout(false);
@@ -392,7 +453,6 @@
         private System.Windows.Forms.ToolStripStatusLabel toolPanelTime;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel3;
         private System.Windows.Forms.ToolStripStatusLabel toolPanelStatus;
-        private System.Windows.Forms.PropertyGrid propertyGrid1;
         private System.Windows.Forms.Panel viewerPanel;
         private System.Windows.Forms.ListView listModelObjects;
         private System.Windows.Forms.ImageList MainImageList;
@@ -403,6 +463,13 @@
         private System.Windows.Forms.ToolStripMenuItem contextItemDeleteElement;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem contextItemConnectElements;
+        private System.Windows.Forms.PropertyGrid propertyGrid1;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private System.Windows.Forms.ListBox nodesWithCountList;
+        private System.Windows.Forms.ToolStripTextBox toolStripItemsCount;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
     }
 }
 

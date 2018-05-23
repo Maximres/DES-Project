@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace QueueSimulation.BL.Objects
 {
+    [Serializable]
     public abstract class ProductBase
     {
         /// <summary>

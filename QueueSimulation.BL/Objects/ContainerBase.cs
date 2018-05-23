@@ -9,13 +9,14 @@ using System.Threading.Tasks;
 
 namespace QueueSimulation.BL.Objects
 {
+    [Serializable]
     public abstract class ContainerBase<T> where T : ProductBase
     {
         /// <summary>
         /// Добавляет вершину к объекту.
         /// </summary>
         /// <param name="node"></param>
-        //public virtual void JoinWithPrevious(IDequeueable<T> node)
+        //public virtual void JoinPrevious(IDequeueable<T> node)
         //{
         //    throw new NotImplementedException();
         //}

@@ -14,15 +14,15 @@ namespace QueueSimulation.BL.Objects
     /// <summary>
     /// Станок
     /// </summary>
+    [Serializable]
     public class Machine<T> : ContainerBase<T>, IMachine<T> where T : ProductBase
     {
         /// <summary>
         /// Crash rate.
         /// </summary>
-        protected Exponential _exponential;
+        //protected Exponential _exponential;
         static readonly object locker = new object();
-        bool _justCrashed = false;
-        TimeSpan TimeStampCrash;
+        private static readonly Random random1to100 = new Random();
         protected DateTime Past { get; private set; }
         TimeSpan span;
         DateTime spanAfterDequeue;
@@ -36,15 +36,9 @@ namespace QueueSimulation.BL.Objects
         {
             Past = new DateTime();
             _productsQueue = new Queue<T>();
-            _exponential = new Exponential(1000);
+            //_exponential = new Exponential(1000);
             spanAfterDequeue = DateTime.Now;
         }
-
-        /// <summary>
-        /// Определяет, можно ли добавить продукт на конвейер.
-        /// </summary>
-        //public abstract bool CanTakeProduct { get; }
-
 
         /// <summary>
         /// Определяет, можно ли передать продукт с конвейера
@@ -53,14 +47,6 @@ namespace QueueSimulation.BL.Objects
         [ReadOnly(true)]
         [Description("Определяет, можно ли передать продукт с конвейера")]
         public bool CanThrowProduct { get; }
-
-        ///// <summary>
-        ///// Порт выхода объекта.
-        ///// </summary>
-        //[Browsable(true)]
-        //[ReadOnly(true)]
-        //[Description("Название продукта продукта")]
-        //public abstract ContainerBase<T> PortOut { get; set; }
 
         /// <summary>
         /// Задает значение задержки производства продукции (в секундах).
@@ -77,7 +63,7 @@ namespace QueueSimulation.BL.Objects
         [Browsable(true)]
         [ReadOnly(true)]
         [Description("Определяет, сломан (неактивен) ли станок")]
-        public bool IsBroken { get; }
+        public bool IsBroken { get; set; } = false;
 
         /// <summary>
         /// Получает или задает время бездействия во время поломки станка.
@@ -181,57 +167,33 @@ namespace QueueSimulation.BL.Objects
         {
             if (PorOut is ContainerBase<ProductBase> container && container.CanTakeProduct)
             {
+                if (CanThrow() && NotBroken())
+                {
+                    //Dequeue(this, new ProductEngagedEventArgs<T>(_productsQueue.Dequeue()));
+                    spanAfterDequeue = DateTime.Now;
+                    OnDequeue(this, new ProductEngagedEventArgs<T>(_productsQueue.Dequeue()));
+                }
             }
-            if (CanThrow() /*&& NotBroken()*/)
-            {
-                //Dequeue(this, new ProductEngagedEventArgs<T>(_productsQueue.Dequeue()));
-                spanAfterDequeue = DateTime.Now;
-                OnDequeue(this, new ProductEngagedEventArgs<T>(_productsQueue.Dequeue()));
-#if DEBUG
-                //System.Diagnostics.Debug.WriteLine(TestValue++);
-#endif
-            }
+
+
         }
-
-        //public override void JoinWithPrevious(IDequeueable<T> node)
-        //{
-        //    if (PortIn != null)
-        //    {
-        //        RemoveNode(node);
-        //    }
-        //    node.PorOut = this;
-        //    PortIn = node;
-        //    node.OnDequeue += Enqueue;
-        //}
-
-        //public override void RemoveNode(IDequeueable<T> node)
-        //{
-        //    PortIn = null;
-        //    node.OnDequeue -= Enqueue;
-        //    node.PorOut = null;
-        //}
 
         protected bool NotBroken()
         {
             //TODO: алгоритм работы станка с учетом поломки
-            var crashed = _exponential.Sample();
-            if (crashed > CrashChance)
+            //if (IsBroken && CanThrow())
+            //{
+            //    IsBroken = false;
+            //    return true;
+            //}
+            var chance = CrashChance * 100;
+            if (random1to100.Next(1,101) <= chance)
             {
-                if (_justCrashed == false)
-                {
-                    _justCrashed = true;
-                    TimeStampCrash = new TimeSpan(0, 0, (int)InactiveTime);
-                    return false;
-                }
-                else
-                {
-                    if ((DateTime.Now - TimeStampCrash).Second > (int)InactiveTime)
-                    {
-                        _justCrashed = false;
-                    }
-                }
-
+                Past.AddSeconds(InactiveTime);
+                IsBroken = true;
+                return false;
             }
+            IsBroken = false;
             return true;
         }
 
@@ -247,11 +209,16 @@ namespace QueueSimulation.BL.Objects
             return false;
         }
 
-        public void JoinWithPrevious(IDequeueable<T> node)
+        public void JoinPrevious(IDequeueable<T> node)
         {
             node.PorOut = this;
             PortIn = node;
             node.OnDequeue += Enqueue;
+        }
+
+        public void Reset()
+        {
+            _productsQueue = new Queue<T>();
         }
     }
 }

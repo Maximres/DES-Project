@@ -8,6 +8,7 @@ using QueueSimulation.BL.Infrastructure;
 
 namespace QueueSimulation.BL.Objects
 {
+    [Serializable]
     public abstract class SeedBase<T> : ContainerBase<T>, ISimulation<T> where T : ProductBase
     {
         int _count;
@@ -58,11 +59,21 @@ namespace QueueSimulation.BL.Objects
             throw new NotSupportedException();
         }
 
-        public void JoinWithPrevious(IDequeueable<T> node)
+        public void JoinPrevious(IDequeueable<T> node)
         {
             node.PorOut = this;
             PortIn = node;
             node.OnDequeue += SeedObject;
+        }
+
+        public void Reset()
+        {
+            
+        }
+
+        public void Reset(int count)
+        {
+            _count = count;
         }
     }
 }

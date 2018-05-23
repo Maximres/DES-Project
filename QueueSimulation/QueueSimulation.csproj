@@ -55,10 +55,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Infrastructure\Factory\IndustryFactory.cs" />
-    <Compile Include="Infrastructure\Factory\IndustryObjectFactory.cs" />
     <Compile Include="Infrastructure\NodeInsertedByUserEventArgs.cs" />
-    <Compile Include="Infrastructure\Nodes\NextNodeId.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
