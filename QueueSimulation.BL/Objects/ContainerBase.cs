@@ -9,18 +9,19 @@ using System.Threading.Tasks;
 
 namespace QueueSimulation.BL.Objects
 {
+    [Serializable]
     public abstract class ContainerBase<T> where T : ProductBase
     {
         /// <summary>
         /// Добавляет вершину к объекту.
         /// </summary>
         /// <param name="node"></param>
-        public virtual void AddNode(IDequeueable<T> node)
-        {
-            throw new NotImplementedException();
-        }
+        //public virtual void JoinPrevious(IDequeueable<T> node)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
-        public virtual void RemoveNode(IDequeueable<T> node) => throw new NotImplementedException();
+        //public virtual void RemoveNode(IDequeueable<T> node) => throw new NotImplementedException();
 
         [Browsable(true)]
         [ReadOnly(false)]
@@ -33,5 +34,10 @@ namespace QueueSimulation.BL.Objects
         //public abstract string Name { get; set; }
 
         public abstract int Id { get; set; }
+
+        [Browsable(true)]
+        [ReadOnly(true)]
+        [Description("Определяет, можно ли добавить продуки на станок")]
+        public abstract bool CanTakeProduct { get; }
     }
 }

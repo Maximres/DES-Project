@@ -8,14 +8,13 @@ using System.Threading.Tasks;
 
 namespace QueueSimulation.BL.Abstract
 {
-    public interface ISimulation<T> : IEnqueueable<T>, IDequeueable<T> where T : ProductBase
+    public interface ISimulation<T> : IEnqueueable<T>, IDequeueable<T>, IResetable where T : ProductBase
     {
         /// <summary>
         /// Эмуляция процесса работы.
         /// </summary>
         void Simulate();
 
-        
 
         /// <summary>
         /// Происходит, когда в источнике заканчиваются объекты
@@ -41,5 +40,7 @@ namespace QueueSimulation.BL.Abstract
         int Count { get; }
 
         string Name { get; set; }
+
+         void JoinPrevious(IDequeueable<T> node);
     }
 }

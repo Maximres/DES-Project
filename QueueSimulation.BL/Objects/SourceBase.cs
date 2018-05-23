@@ -11,6 +11,7 @@ using System.Xml.Serialization;
 
 namespace QueueSimulation.BL.Objects
 {
+    [Serializable]
     public abstract class SourceBase<T> : ISource<T> where T : ProductBase
     {
         /// <summary>
@@ -74,35 +75,40 @@ namespace QueueSimulation.BL.Objects
             //}
 
                 //var temp = this._productsQueue.Dequeue();
-            OnDequeue(this, new ProductEngagedEventArgs<T>(e.Product));
-            
 
         }
 
+        /// <summary>
+        /// Обнуляет очередь.
+        /// </summary>
         public void Reset()
         {
-            _productsQueue = new Queue<T>(_productsCollection);
+            _productsQueue = new Queue<T>();
         }
 
-        public void Reset(T product)
+        /// <summary>
+        /// Обвновляет очередь элементами и типом продукта.
+        /// </summary>
+        /// <param name="prodCount"></param>
+        /// <param name="product"></param>
+        public void Reset(int prodCount,T product)
         {
-            this._productsQueue = new Queue<T>(this.GenerateSameObjects(this._productsQueue.Count, product));
+            this._productsQueue = new Queue<T>(this.GenerateSameObjects(prodCount, product));
         }
 
         public void Simulate()
         {
             TimeSpan timeSpan = DateTime.Now - Past;
-            if (_productsQueue.Count > 0)
+            if (PorOut is ContainerBase<ProductBase> container && container.CanTakeProduct)
             {
-                if (timeSpan.Seconds >= ArrivalRate)
+                if (_productsQueue.Count > 0)
                 {
-                    Past = DateTime.Now;
-                    Dequeue(this, new ProductEngagedEventArgs<T>(this._productsQueue.Dequeue()));
+                    if (timeSpan.Seconds >= ArrivalRate)
+                    {
+                        Past = DateTime.Now;
+                        OnDequeue(this, new ProductEngagedEventArgs<T>(_productsQueue.Dequeue()));
+                    }
                 }
-            }
-            else
-            {
-                OnEmpty(this, EventArgs.Empty);
             }
         }
 
@@ -110,6 +116,13 @@ namespace QueueSimulation.BL.Objects
         public void Enqueue(object sender, ProductEngagedEventArgs<T> e)
         {
             throw new NotSupportedException();
+        }
+
+        public void JoinPrevious(IDequeueable<T> node)
+        {
+            node.PorOut = this;
+            PortIn = node;
+            node.OnDequeue += Enqueue;
         }
 
         /// <summary>

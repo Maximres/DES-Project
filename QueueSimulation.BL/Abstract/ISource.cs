@@ -19,7 +19,7 @@ namespace QueueSimulation.BL.Abstract
         /// <summary>
         /// Обновляет источник новыми объектами
         /// </summary>
-        void Reset(T product);
+        void Reset(int count, T product);
 
         
     }
