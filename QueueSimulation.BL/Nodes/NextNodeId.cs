@@ -10,7 +10,7 @@ namespace QueueSimulation.Infrastructure.Nodes
     {
         private static NextNodeId _instance;
         private static int counter;
-        private static object locker = new object();
+        private static readonly object locker = new object();
 
         private NextNodeId()
         {

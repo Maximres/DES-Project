@@ -11,23 +11,15 @@ namespace QueueSimulation.BL.Concrete.Products
     [Serializable]
     public class MintBoxProduct : ProductBase
     {
-        int _id;
+        readonly int _id;
         string _name;
-        bool _isIdle;
-        bool _isProccessed;
-        bool _isMoving;
         Size _size;
-        ProductTypes _prodType;
 
         public MintBoxProduct(int id, string name, Size boxSize)
         {
             _id = id;
             _name = name;
-            _isIdle = true;
-            _isProccessed = false;
-            _isMoving = false;
             _size = boxSize;
-            _prodType = ProductTypes.Mintbox;
         }
 
         /// <summary>
@@ -36,21 +28,21 @@ namespace QueueSimulation.BL.Concrete.Products
         /// <returns></returns>
         public override string ToString()
         {
-            return this._prodType.ToString();
+            return this.ProductType.ToString();
         }
 
         public override int Id => _id;
 
         public override string Name { get => _name; set => _name = value; }
 
-        public override bool IsIdle => _isIdle;
+        public override bool IsIdle => true;
 
         public override Size Size { get => _size; set => _size = value; }
 
-        public override ProductTypes ProductType => _prodType;
+        public override ProductTypes ProductType => ProductTypes.Mintbox;
 
-        public override bool IsProcessed => _isProccessed;
+        public override bool IsProcessed => false;
 
-        public override bool IsMoving => _isMoving;
+        public override bool IsMoving => false;
     }
 }

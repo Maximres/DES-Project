@@ -11,7 +11,7 @@ namespace QueueSimulation.BL.Concrete.Products
     [Serializable]
     public class OrangeBoxProduct : ProductBase
     {
-        int _id;
+        readonly int _id;
 
         public OrangeBoxProduct(int id, string name, Size boxSize)
         {

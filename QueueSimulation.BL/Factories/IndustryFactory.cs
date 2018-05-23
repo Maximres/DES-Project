@@ -14,22 +14,22 @@ namespace QueueSimulation
 {
     public class IndustryFactory<T> : IndustryAbstractFactory<T> where T : ProductBase
     {
-        static NextNodeId NodeId = NextNodeId.GetInstance();
-        static MintBoxProduct mintPrototype = new MintBoxProduct(0, "p" + NodeId.GetNextId(), new System.Drawing.Size(1, 2));
-        static RedBoxProduct redPrototype = new RedBoxProduct(1, "p" + NodeId.GetNextId(), new System.Drawing.Size(2, 2));
-        static OrangeBoxProduct orangePrototype = new OrangeBoxProduct(2, "p" + NodeId.GetNextId(), new System.Drawing.Size(2, 3));
+        static NextNodeId IdContainer = NextNodeId.GetInstance();
+        static MintBoxProduct mintPrototype = new MintBoxProduct(0, "p" + IdContainer.GetNextId(), new System.Drawing.Size(1, 2));
+        static RedBoxProduct redPrototype = new RedBoxProduct(1, "p" + IdContainer.GetNextId(), new System.Drawing.Size(2, 2));
+        static OrangeBoxProduct orangePrototype = new OrangeBoxProduct(2, "p" + IdContainer.GetNextId(), new System.Drawing.Size(2, 3));
         static Conveyor<T> conveyorPrototype = new Conveyor<T>()
         {
-            Name = "c" + NodeId.GetNextId(),
-            Delay = 1,
+            Name = "c" + IdContainer.GetNextId(),
+            Delay = 0,
             Capacity = 200,
-            Length = 10,
+            Length = 12,
             Id = 7,
-            Speed = 5
+            Speed = 6
         };
         static Machine<T> firstMachinePrototype = new Machine<T>()
         {
-            Name = "m" + NodeId.GetNextId(),
+            Name = "m" + IdContainer.GetNextId(),
             Id = 3,
             CrashChance = 0.1,
             Delay = 3,
@@ -39,7 +39,7 @@ namespace QueueSimulation
 
         static Machine<T> secondMachinePrototype = new Machine<T>()
         {
-            Name = "m" + NodeId.GetNextId(),
+            Name = "m" + IdContainer.GetNextId(),
             Id = 4,
             CrashChance = 0.15,
             Delay = 3,
@@ -48,7 +48,7 @@ namespace QueueSimulation
         };
         static Machine<T> thirdMachinePrototype = new Machine<T>()
         {
-            Name = "m" + NodeId.GetNextId(),
+            Name = "m" + IdContainer.GetNextId(),
             Id = 5,
             CrashChance = 0.1,
             Delay = 2,
@@ -57,7 +57,7 @@ namespace QueueSimulation
         };
         static Machine<T> fourthMachinePrototype = new Machine<T>()
         {
-            Name = "m" + NodeId.GetNextId(),
+            Name = "m" + IdContainer.GetNextId(),
             Id = 6,
             CrashChance = 0.1,
             Delay = 2,
@@ -89,21 +89,32 @@ namespace QueueSimulation
 
         public override Conveyor<T> CreateConveyor()
         {
-            return (Conveyor<T>)CreateDeepCopy(conveyorPrototype);
+            var conv = (Conveyor<T>)CreateDeepCopy(conveyorPrototype);
+            conv.Name = "c" + IdContainer.GetNextId();
+            return conv;
         }
 
         public override Machine<T> CreateMachine(string machineName)
         {
+            dynamic obj;
             switch (machineName)
             {
                 case "Станок1":
-                    return (Machine<T>)CreateDeepCopy(firstMachinePrototype);
+                    obj = (CreateDeepCopy(firstMachinePrototype) as Machine<T>);
+                    obj.Name = "m" + IdContainer.GetNextId();
+                    return obj;
                 case "Станок2":
-                    return (Machine<T>)CreateDeepCopy(secondMachinePrototype);
+                    obj = (Machine<T>)CreateDeepCopy(secondMachinePrototype);
+                    obj.Name = "m" + IdContainer.GetNextId();
+                    return obj;
                 case "Станок3":
-                    return (Machine<T>)CreateDeepCopy(thirdMachinePrototype);
+                    obj = (Machine<T>)CreateDeepCopy(thirdMachinePrototype);
+                    obj.Name = "m" + IdContainer.GetNextId();
+                    return obj;
                 case "Станок4":
-                    return (Machine<T>)CreateDeepCopy(fourthMachinePrototype);
+                    obj = (Machine<T>)CreateDeepCopy(fourthMachinePrototype);
+                    obj.Name = "m" + IdContainer.GetNextId();
+                    return obj;
                 case null:
                     throw new ArgumentNullException(nameof(machineName), "Name must not be NULL");
                 default:
@@ -140,14 +151,21 @@ namespace QueueSimulation
 
         public override ProductBase CreateProduct(string productName)
         {
+            dynamic obj;
             switch (productName)
             {
                 case "Продукт1":
-                    return (ProductBase)CreateDeepCopy(mintPrototype);
+                    obj = (ProductBase)CreateDeepCopy(mintPrototype);
+                    obj.Name = "p" + IdContainer.GetNextId();
+                    return obj;
                 case "Продукт2":
-                    return (ProductBase)CreateDeepCopy(redPrototype);
+                    obj = (ProductBase)CreateDeepCopy(redPrototype);
+                    obj.Name = "p" + IdContainer.GetNextId();
+                    return obj;
                 case "Продукт3":
-                    return (ProductBase)CreateDeepCopy(orangePrototype);
+                    obj = (ProductBase)CreateDeepCopy(orangePrototype);
+                    obj.Name = "p" + IdContainer.GetNextId();
+                    return obj;
                 case null:
                     throw new ArgumentNullException(nameof(productName), "Name must not be NULL");
                 default:

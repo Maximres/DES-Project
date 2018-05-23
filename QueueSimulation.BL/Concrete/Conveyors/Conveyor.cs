@@ -85,7 +85,7 @@ namespace QueueSimulation.BL.Objects
         [Browsable(true)]
         [ReadOnly(false)]
         [Description("Название объекта")]
-        public string Name { get; set; } = "Matvey";
+        public string Name { get; set; }
 
         [Browsable(true)]
         [ReadOnly(false)]
